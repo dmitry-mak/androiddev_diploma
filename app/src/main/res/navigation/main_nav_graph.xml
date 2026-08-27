@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/main_nav_graph"
+    app:startDestination="@id/postsFragment">
+
+    <fragment
+        android:id="@+id/postsFragment"
+        android:name="ru.netology.nework.ui.posts.PostsFragment"
+        android:label="Posts" />
+    <fragment
+        android:id="@+id/eventsFragment"
+        android:name="ru.netology.nework.ui.events.EventsFragment"
+        android:label="Events"/>
+    <fragment
+        android:id="@+id/usersFragment"
+        android:name="ru.netology.nework.ui.users.UsersFragment"
+        android:label="Users"/>
+
+</navigation>
