@@ -1,24 +1,39 @@
 package ru.netology.nework.activity
 
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.MenuProvider
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import ru.netology.nework.R
+import ru.netology.nework.auth.AppAuth
 import ru.netology.nework.databinding.ActivityMainBinding
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class AppActivity : AppCompatActivity() {
+
+    @Inject
+    lateinit var appAuth: AppAuth
+
+    private lateinit var binding: ActivityMainBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
-        val binding = ActivityMainBinding.inflate(layoutInflater)
+        binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        setSupportActionBar(binding.toolbar)
 
 //        setContentView(R.layout.activity_main)
         ViewCompat.setOnApplyWindowInsetsListener(binding.main) { v, insets ->
@@ -33,6 +48,50 @@ class AppActivity : AppCompatActivity() {
 
 //        val navController = findNavController(R.id.main_nav_host)
         val navController = navHostFragment.navController
+
         binding.bottomNav.setupWithNavController(navController)
+
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            supportActionBar?.title = destination.label
+        }
+
+        addMenuProvider(object : MenuProvider {
+            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+//                    menu.clear()
+                menuInflater.inflate(R.menu.menu_main, menu)
+            }
+
+            override fun onPrepareMenu(menu: Menu) {
+                val isAuthenticated = appAuth.authState.value.token != null
+                menu.setGroupVisible(R.id.group_authenticated_not, !isAuthenticated)
+                menu.setGroupVisible(R.id.group_authenticated, isAuthenticated)
+            }
+
+            override fun onMenuItemSelected(item: MenuItem): Boolean =
+                when (item.itemId) {
+                    R.id.menu_login -> {
+                        navController.navigate(R.id.action_global_loginFragment)
+                        true
+                    }
+
+                    R.id.menu_register -> {
+                        navController.navigate(R.id.action_global_registerFragment)
+                        true
+                    }
+
+                    R.id.menu_logout -> {
+                        appAuth.removeAuth()
+                        true
+                    }
+
+                    else -> false
+                }
+        }, this)
+
+        lifecycleScope.launch {
+            appAuth.authState.collect {
+                invalidateOptionsMenu()
+            }
+        }
     }
 }

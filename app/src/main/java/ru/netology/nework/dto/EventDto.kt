@@ -9,10 +9,7 @@ data class EventDto(
     val content: String,
     val datetime: String,
     val published: String,
-//    "coords": {
-//    "lat": 0.1,
-//    "long": 0.1
-//},
+
     val coords: CoordinatesDto? = null,
 
     val type: EventType = EventType.ONLINE,

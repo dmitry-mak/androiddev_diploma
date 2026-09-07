@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <group android:id="@+id/group_authenticated_not">
+        <item
+            android:id="@+id/menu_login"
+            android:title="Вход"
+            app:showAsAction="never" />
+        <item
+            android:id="@+id/menu_register"
+            android:title="Регистрация"
+            app:showAsAction="never" />
+    </group>
+
+    <group android:id="@+id/group_authenticated">
+        <item
+            android:id="@+id/menu_logout"
+            android:title="Выход"
+            app:showAsAction="never" />
+    </group>
+</menu>

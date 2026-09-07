@@ -7,7 +7,7 @@ import java.time.Instant
 object DateUtils {
 
     private val timeFormat = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm")
-    private val dateFormat = DateTimeFormatter.ofPattern("dd MM yyyy")
+    private val dateFormat = DateTimeFormatter.ofPattern("dd MMM yyyy")
 
     fun formatTimeForOutput(inputTime: String): String =
         try {

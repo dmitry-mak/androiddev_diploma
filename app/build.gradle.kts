@@ -83,6 +83,10 @@ dependencies {
     implementation(libs.okhttp)
     implementation(libs.logging.interceptor)
 
+    implementation(libs.glide)
+    implementation(libs.androidx.recyclerview)
+    implementation(libs.androidx.swiperefreshlayout)
+
     implementation(libs.hilt.android)
     ksp(libs.hilt.compiler)
 

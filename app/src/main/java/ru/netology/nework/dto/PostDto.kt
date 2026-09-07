@@ -18,5 +18,3 @@ data class PostDto(
     val attachment: AttachmentDto? = null,
     val users: Map<String, UserPreviewDto> = emptyMap()
 )
-
-

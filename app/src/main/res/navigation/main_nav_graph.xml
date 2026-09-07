@@ -11,10 +11,32 @@
     <fragment
         android:id="@+id/eventsFragment"
         android:name="ru.netology.nework.ui.events.EventsFragment"
-        android:label="Events"/>
+        android:label="Events" />
     <fragment
         android:id="@+id/usersFragment"
         android:name="ru.netology.nework.ui.users.UsersFragment"
-        android:label="Users"/>
+        android:label="Users" />
+
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="ru.netology.nework.ui.auth.LoginFragment"
+        android:label="Login">
+        <action
+            android:id="@+id/action_loginFragment_to_registerFragment"
+            app:destination="@+id/registerFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/registerFragment"
+        android:name="ru.netology.nework.ui.auth.RegisterFragment"
+        android:label="Register" />
+
+    <action
+        android:id="@+id/action_global_loginFragment"
+        app:destination="@+id/loginFragment" />
+
+    <action
+        android:id="@+id/action_global_registerFragment"
+        app:destination="@+id/registerFragment"/>
 
 </navigation>
