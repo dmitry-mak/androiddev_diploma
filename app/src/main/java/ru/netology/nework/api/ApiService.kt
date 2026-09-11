@@ -3,6 +3,8 @@ package ru.netology.nework.api
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.Response
+import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.Multipart
 import retrofit2.http.POST
@@ -15,7 +17,9 @@ import ru.netology.nework.dto.PostDto
 import ru.netology.nework.dto.TokenDto
 import ru.netology.nework.dto.UserDto
 
-interface ApiService {
+interface PostApiService
+
+interface ApiService : PostApiService {
 
     @POST("api/users/authentication")
     suspend fun login(
@@ -44,15 +48,35 @@ interface ApiService {
     @GET("api/posts/latest")
     suspend fun getLatestPosts(@Query("count") count: Int): Response<List<PostDto>>
 
+    @GET("api/posts/{id}/newer")
+    suspend fun getNewerPosts(@Path("id") id: Long): Response<List<PostDto>>
+
     @GET("api/posts/{id}")
     suspend fun getPostById(@Path("id") id: Long): Response<PostDto>
 
-    @GET("api/events")
-    suspend fun getEvents(): Response<List<EventDto>>
+    @POST("api/posts")
+    suspend fun savePost(@Body post: PostDto): Response<PostDto>
 
-    @GET("api/users")
-    suspend fun getUsers(): Response<List<UserDto>>
+    @DELETE("api/posts/{id}")
+    suspend fun deletePostById(@Path("id") id: Long): Response<Unit>
+
+    @POST("api/posts/{id}/likes")
+    suspend fun likePostById(@Path("id") id: Long): Response<PostDto>
+
+    @DELETE("api/posts/{id}/likes")
+    suspend fun unlikePostById(@Path("id") id: Long): Response<PostDto>
 
     @GET("api/users/{id}")
     suspend fun getUserById(@Path("id") id: Long): Response<UserDto>
+
+
+    //    API EVENTS:
+    @GET("api/events")
+    suspend fun getEvents(): Response<List<EventDto>>
+
+    //    API USERS:
+    @GET("api/users")
+    suspend fun getUsers(): Response<List<UserDto>>
+
+
 }

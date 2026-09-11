@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">NeWork</string>
+    <string name="avatar">Аватар</string>
+    <string name="menu_button">Меню</string>
 </resources>

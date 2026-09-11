@@ -2,4 +2,6 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="post_media_placeholder">#E8DFF2</color>
+
 </resources>
