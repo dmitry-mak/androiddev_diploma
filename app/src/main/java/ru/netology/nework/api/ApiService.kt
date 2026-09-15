@@ -11,15 +11,15 @@ import retrofit2.http.POST
 import retrofit2.http.Part
 import retrofit2.http.Path
 import retrofit2.http.Query
+import ru.netology.nework.dto.CreatePostRequest
 import ru.netology.nework.dto.EventDto
 import ru.netology.nework.dto.MediaDto
 import ru.netology.nework.dto.PostDto
 import ru.netology.nework.dto.TokenDto
 import ru.netology.nework.dto.UserDto
 
-interface PostApiService
 
-interface ApiService : PostApiService {
+interface ApiService {
 
     @POST("api/users/authentication")
     suspend fun login(
@@ -55,7 +55,7 @@ interface ApiService : PostApiService {
     suspend fun getPostById(@Path("id") id: Long): Response<PostDto>
 
     @POST("api/posts")
-    suspend fun savePost(@Body post: PostDto): Response<PostDto>
+    suspend fun savePost(@Body post: CreatePostRequest): Response<PostDto>
 
     @DELETE("api/posts/{id}")
     suspend fun deletePostById(@Path("id") id: Long): Response<Unit>

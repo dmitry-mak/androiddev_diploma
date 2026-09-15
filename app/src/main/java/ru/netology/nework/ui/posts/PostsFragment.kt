@@ -5,6 +5,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -30,6 +31,7 @@ class PostsFragment : Fragment(R.layout.fragment_posts) {
     private var _binding: FragmentPostsBinding? = null
     private val binding get() = _binding!!
     private lateinit var adapter: PostAdapter
+    private var authDialog: AlertDialog? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
@@ -37,8 +39,21 @@ class PostsFragment : Fragment(R.layout.fragment_posts) {
 
         _binding = FragmentPostsBinding.bind(view)
 
-        binding.postsList.layoutManager = LinearLayoutManager(requireContext())
+        setupAdapter()
+        setupSwipeRefresh()
+        setupFab()
+        setupObservers()
 
+    }
+
+    private fun setupSwipeRefresh() {
+        binding.swipeRefresh.setOnRefreshListener {
+            viewModel.loadPosts()
+        }
+    }
+
+    private fun setupAdapter() {
+        binding.postsList.layoutManager = LinearLayoutManager(requireContext())
         adapter = PostAdapter(object : OnPostInteractionListener {
 
             override fun onLike(post: PostDto) {
@@ -65,13 +80,13 @@ class PostsFragment : Fragment(R.layout.fragment_posts) {
             }
 
             override fun onOpen(post: PostDto) {
-// прописать на шаге №3 - навигация в детали поста
+                // прописать на шаге №3 - навигация в детали поста
                 Toast.makeText(requireContext(), "Детали поста № ${post.id}", Toast.LENGTH_SHORT)
                     .show()
             }
 
             override fun onEdit(post: PostDto) {
-//                прописать на шаге №3 - навигация в редактирование поста
+                //                прописать на шаге №3 - навигация в редактирование поста
                 Toast.makeText(requireContext(), "Редактирование поста", Toast.LENGTH_SHORT).show()
             }
 
@@ -80,7 +95,7 @@ class PostsFragment : Fragment(R.layout.fragment_posts) {
             }
 
             override fun onImageClick(post: PostDto) {
-//                прописать на шаге № 3 - просмотр полноразмерного фото
+                //                прописать на шаге № 3 - просмотр полноразмерного фото
                 Toast.makeText(requireContext(), "Просмотр вложения - фото", Toast.LENGTH_SHORT)
                     .show()
             }
@@ -92,43 +107,55 @@ class PostsFragment : Fragment(R.layout.fragment_posts) {
                 startActivity(intent)
             }
         })
-
         binding.postsList.adapter = adapter
+    }
 
-        binding.swipeRefresh.setOnRefreshListener {
-            viewModel.loadPosts()
-        }
-
-        binding.fab.setOnClickListener {
-            if (viewModel.isAuthorized()) {
-                Toast.makeText(requireContext(), "Создание поста - шаг № 3", Toast.LENGTH_SHORT)
-                    .show()
-            } else {
-                showAuthDialog()
-            }
-        }
-
+    private fun setupObservers() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                launch {
-                    viewModel.state.collect { state ->
-                        binding.swipeRefresh.isRefreshing = state.loading
-                        binding.progress.isVisible = state.loading && state.posts.isEmpty()
-                        binding.empty.isVisible = !state.loading && state.posts.isEmpty()
-                        adapter.submitList(state.posts)
-                    }
+                viewModel.state.collect { state ->
+                    binding.swipeRefresh.isRefreshing = state.loading
+                    binding.progress.isVisible = state.loading && state.posts.isEmpty()
+                    binding.empty.isVisible = !state.loading && state.posts.isEmpty()
+                    adapter.submitList(state.posts)
                 }
-                launch {
-                    viewModel.error.collect { message ->
-                        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
-                    }
+            }
+        }
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.error.collect { message ->
+                    Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
                 }
             }
         }
     }
 
+    private fun setupPostChangedListener() {
+        findNavController().currentBackStackEntry?.savedStateHandle
+            ?.getLiveData<Boolean>(CreatePostFragment.IS_POST_CHANGED)
+            ?.observe(viewLifecycleOwner) { postChanged ->
+                if (postChanged == true) {
+                    viewModel.loadPosts()
+                    findNavController().currentBackStackEntry?.savedStateHandle
+                        ?.set(CreatePostFragment.IS_POST_CHANGED, false)
+                }
+            }
+    }
+
+    private fun setupFab() {
+        binding.fab.setOnClickListener {
+            if (viewModel.isAuthorized()) {
+                findNavController().navigate(R.id.action_postsFragment_to_createPostFragment)
+            } else {
+                showAuthDialog()
+            }
+        }
+    }
+
+
     private fun showAuthDialog() {
-        MaterialAlertDialogBuilder(requireContext())
+        if (authDialog?.isShowing == true) return
+        authDialog = MaterialAlertDialogBuilder(requireContext())
             .setTitle("Необходимо авторизоваться")
             .setMessage("Войдите или зарегистрируйтесь чтобы продолжить")
             .setPositiveButton("Вход") { _, _ ->
@@ -143,6 +170,8 @@ class PostsFragment : Fragment(R.layout.fragment_posts) {
 
     override fun onDestroyView() {
         super.onDestroyView()
+        authDialog?.dismiss()
+        authDialog = null
         _binding = null
     }
 }

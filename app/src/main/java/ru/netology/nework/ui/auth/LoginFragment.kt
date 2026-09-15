@@ -98,9 +98,6 @@ class LoginFragment : Fragment() {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch {
                     viewModel.loading.collect { isLoading ->
-//                        binding.btnLogin.isEnabled = !isLoading
-//                        binding.etLogin.isEnabled = !isLoading
-//                        binding.etPassword.isEnabled = !isLoading
                         if (isLoading) binding.btnLogin.isEnabled = false
                         else updateButton()
                     }
@@ -153,6 +150,3 @@ class LoginFragment : Fragment() {
         binding.passwordError.visibility = View.GONE
     }
 }
-
-
-

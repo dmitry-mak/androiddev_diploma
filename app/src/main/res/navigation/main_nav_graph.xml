@@ -7,7 +7,12 @@
     <fragment
         android:id="@+id/postsFragment"
         android:name="ru.netology.nework.ui.posts.PostsFragment"
-        android:label="Posts" />
+        android:label="Posts">
+        <action
+            android:id="@+id/action_postsFragment_to_createPostFragment"
+            app:destination="@id/createPostFragment" />
+    </fragment>
+
     <fragment
         android:id="@+id/eventsFragment"
         android:name="ru.netology.nework.ui.events.EventsFragment"
@@ -37,6 +42,16 @@
 
     <action
         android:id="@+id/action_global_registerFragment"
-        app:destination="@+id/registerFragment"/>
+        app:destination="@+id/registerFragment" />
+
+    <fragment
+        android:id="@+id/createPostFragment"
+        android:name="ru.netology.nework.ui.posts.CreatePostFragment"
+        android:label="New post">
+        <argument
+            android:name="postId"
+            android:defaultValue="0L"
+            app:argType="long" />
+    </fragment>
 
 </navigation>

@@ -1,0 +1,107 @@
+package ru.netology.nework.ui.posts
+
+import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
+import ru.netology.nework.dto.CreatePostRequest
+import ru.netology.nework.repository.PostRepository
+import javax.inject.Inject
+
+
+data class CreatePostUiState(
+    val postId: Long = 0,
+    val content: String = "",
+    val link: String = "",
+    val saving: Boolean = false
+)
+
+@HiltViewModel
+class CreatePostViewModel @Inject constructor(
+    private val repository: PostRepository,
+    savedStateHandle: SavedStateHandle
+) : ViewModel() {
+
+    private val _state = MutableStateFlow(CreatePostUiState())
+    val state = _state.asStateFlow()
+
+    private val _error = MutableSharedFlow<String>()
+    val error = _error.asSharedFlow()
+
+    private val _postSaved = MutableSharedFlow<Unit>()
+    val postSaved = _postSaved.asSharedFlow()
+
+    init {
+       val postId = savedStateHandle.get<Long>("postId") ?: 0
+        if(postId != 0L) loadForEdit(postId)
+    }
+
+    private fun loadForEdit(id: Long) {
+        viewModelScope.launch {
+            repository.getPostById(id)
+                .onSuccess { post ->
+                    _state.update {
+                        it.copy(
+                            postId = post.id,
+                            content = post.content,
+                            link = post.link.orEmpty()
+                        )
+                    }
+                }
+                .onFailure { e ->
+                    _error.emit(e.message ?: "Не удалось загрузить пост")
+                }
+        }
+    }
+
+    fun updateContent(value: String) = _state.update {
+        it.copy(
+            content = value
+        )
+    }
+
+    fun updateLink(value: String) = _state.update {
+        it.copy(
+            link = value
+        )
+    }
+
+
+    fun save() {
+        val current = _state.value
+        if (current.content.isBlank()) {
+            viewModelScope.launch {
+                _error.emit("Содержимое поста не может быть пустым")
+            }
+            return
+        }
+
+        viewModelScope.launch {
+            _state.update { it.copy(saving = true) }
+
+            val request = CreatePostRequest(
+                id = current.postId,
+                content = current.content.trim(),
+                link = current.link.trim().takeIf { it.isNotBlank() }
+            )
+
+            repository.createPost(request)
+                .onSuccess {
+                    _state.update { it.copy(saving = false) }
+                    _postSaved.emit(Unit)
+                }
+                .onFailure { e ->
+                    _state.update { it.copy(saving = false) }
+                    _error.emit(e.message ?: "Не удалось сохранить пост")
+                }
+        }
+    }
+
+
+}

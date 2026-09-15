@@ -10,7 +10,10 @@ import androidx.core.view.MenuProvider
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -26,6 +29,9 @@ class AppActivity : AppCompatActivity() {
     lateinit var appAuth: AppAuth
 
     private lateinit var binding: ActivityMainBinding
+
+    private lateinit var navController: NavController
+    private lateinit var appBarConfiguration: AppBarConfiguration
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,13 +53,24 @@ class AppActivity : AppCompatActivity() {
             supportFragmentManager.findFragmentById(R.id.main_nav_host) as NavHostFragment
 
 //        val navController = findNavController(R.id.main_nav_host)
-        val navController = navHostFragment.navController
+         navController = navHostFragment.navController
 
+//        binding.bottomNav.setupWithNavController(navController)
+
+         appBarConfiguration = AppBarConfiguration(
+            setOf(
+                R.id.postsFragment,
+                R.id.eventsFragment,
+                R.id.usersFragment
+            )
+        )
+
+        setupActionBarWithNavController(navController, appBarConfiguration)
         binding.bottomNav.setupWithNavController(navController)
 
-        navController.addOnDestinationChangedListener { _, destination, _ ->
-            supportActionBar?.title = destination.label
-        }
+//        navController.addOnDestinationChangedListener { _, destination, _ ->
+//            supportActionBar?.title = destination.label
+//        }
 
         addMenuProvider(object : MenuProvider {
             override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
@@ -93,5 +110,9 @@ class AppActivity : AppCompatActivity() {
                 invalidateOptionsMenu()
             }
         }
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        return navController.navigateUp() ||  super.onSupportNavigateUp()
     }
 }
