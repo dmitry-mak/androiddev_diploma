@@ -11,6 +11,34 @@
         <action
             android:id="@+id/action_postsFragment_to_createPostFragment"
             app:destination="@id/createPostFragment" />
+        <action
+            android:id="@+id/action_postsFragment_to_postDetailFragment"
+            app:destination="@id/postDetailFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/postDetailFragment"
+        android:name="ru.netology.nework.ui.posts.PostDetailFragment"
+        android:label="Post">
+        <argument
+            android:name="postId"
+            app:argType="long" />
+        <action
+            android:id="@+id/action_postDetailFragment_to_usersListFragment"
+            app:destination="@id/usersListFragment" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/usersListFragment"
+        android:name="ru.netology.nework.ui.users.UsersListFragment"
+        android:label="Users">
+        <argument
+            android:name="userIds"
+            app:argType="long[]" />
+        <argument
+            android:name="title"
+            app:argType="string" />
     </fragment>
 
     <fragment

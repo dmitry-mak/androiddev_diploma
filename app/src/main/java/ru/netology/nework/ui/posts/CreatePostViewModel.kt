@@ -58,7 +58,8 @@ class CreatePostViewModel @Inject constructor(
                         it.copy(
                             postId = post.id,
                             content = post.content,
-                            link = post.link.orEmpty()
+                            link = post.link.orEmpty(),
+                            attachment = post.attachment
                         )
                     }
                 }
@@ -143,6 +144,4 @@ class CreatePostViewModel @Inject constructor(
                 }
         }
     }
-
-
 }

@@ -43,7 +43,7 @@ class PostsFragment : Fragment(R.layout.fragment_posts) {
         setupSwipeRefresh()
         setupFab()
         setupObservers()
-
+        setupPostChangedListener()
     }
 
     private fun setupSwipeRefresh() {
@@ -81,13 +81,23 @@ class PostsFragment : Fragment(R.layout.fragment_posts) {
 
             override fun onOpen(post: PostDto) {
                 // прописать на шаге №3 - навигация в детали поста
-                Toast.makeText(requireContext(), "Детали поста № ${post.id}", Toast.LENGTH_SHORT)
-                    .show()
+//                Toast.makeText(requireContext(), "Детали поста № ${post.id}", Toast.LENGTH_SHORT)
+//                    .show()
+                val bundle = Bundle().apply { putLong("postId", post.id) }
+                findNavController().navigate(
+                    R.id.action_postsFragment_to_postDetailFragment,
+                    bundle
+                )
             }
 
             override fun onEdit(post: PostDto) {
                 //                прописать на шаге №3 - навигация в редактирование поста
-                Toast.makeText(requireContext(), "Редактирование поста", Toast.LENGTH_SHORT).show()
+//                Toast.makeText(requireContext(), "Редактирование поста", Toast.LENGTH_SHORT).show()
+                val bundle = Bundle().apply { putLong("postId", post.id) }
+                findNavController().navigate(
+                    R.id.action_postsFragment_to_createPostFragment,
+                    bundle
+                )
             }
 
             override fun onRemove(post: PostDto) {

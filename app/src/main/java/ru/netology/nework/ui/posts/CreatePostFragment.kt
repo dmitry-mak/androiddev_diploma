@@ -145,12 +145,18 @@ class CreatePostFragment : Fragment(R.layout.fragment_create_post) {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch {
                     viewModel.state.collect { state ->
+
+                        if (state.postId != 0L && binding.newPostContent.text.isNullOrEmpty() && state.content.isNotBlank()) {
+                            binding.newPostContent.setText(state.content)
+                        }
+
                         binding.uploadProgress.isVisible = state.uploading || state.saving
 
                         val hasAttachment = state.attachment != null
                         binding.newPostAttachmentContainer.isVisible = hasAttachment
-                        if(hasAttachment){
-                            val imageSource = state.previewUri ?: UrlUtils.mediaUrl(state.attachment?.url)
+                        if (hasAttachment) {
+                            val imageSource =
+                                state.previewUri ?: UrlUtils.mediaUrl(state.attachment?.url)
                             Glide.with(binding.newPostAttachmentImage)
                                 .load(imageSource)
                                 .centerCrop()
