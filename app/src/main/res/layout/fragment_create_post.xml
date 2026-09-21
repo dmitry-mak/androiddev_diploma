@@ -31,6 +31,15 @@
                 android:minLines="6"
                 android:textColor="#3E3A49"
                 android:textSize="16sp" />
+            <TextView
+                android:id="@+id/mention_counter"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:textColor="#6C4CB4"
+                android:textSize="14sp"
+                android:visibility="gone"
+                android:text="Mentioned: 3"/>
 
             <FrameLayout
                 android:id="@+id/new_post_attachment_container"

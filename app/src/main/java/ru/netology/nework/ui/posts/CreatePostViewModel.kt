@@ -25,6 +25,7 @@ data class CreatePostUiState(
     val link: String = "",
     val attachment: AttachmentDto? = null,
     val previewUri: Uri? = null,
+    val mentionIds: List<Long> = emptyList(),
     val uploading: Boolean = false,
     val saving: Boolean = false
 )
@@ -59,7 +60,8 @@ class CreatePostViewModel @Inject constructor(
                             postId = post.id,
                             content = post.content,
                             link = post.link.orEmpty(),
-                            attachment = post.attachment
+                            attachment = post.attachment,
+                            mentionIds = post.mentionIds
                         )
                     }
                 }
@@ -74,6 +76,8 @@ class CreatePostViewModel @Inject constructor(
             content = value
         )
     }
+
+    fun setMentions(ids: List<Long>) = _state.update { it.copy(mentionIds = ids) }
 
     fun updateLink(value: String) = _state.update {
         it.copy(
@@ -130,7 +134,8 @@ class CreatePostViewModel @Inject constructor(
                 id = current.postId,
                 content = current.content.trim(),
                 link = current.link.trim().takeIf { it.isNotBlank() },
-                attachment = current.attachment
+                attachment = current.attachment,
+                mentionIds = current.mentionIds
             )
 
             repository.createPost(request)

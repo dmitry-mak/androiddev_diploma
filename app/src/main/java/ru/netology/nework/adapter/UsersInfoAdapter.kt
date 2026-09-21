@@ -6,14 +6,21 @@ import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import androidx.viewbinding.ViewBinding
 import com.bumptech.glide.Glide
 import ru.netology.nework.adapter.UsersInfoAdapter.UserViewHolder
 import ru.netology.nework.databinding.UserInfoCardBinding
 import ru.netology.nework.dto.UserDto
 import ru.netology.nework.util.UrlUtils
 
-class UsersInfoAdapter : ListAdapter<UserDto, UserViewHolder>(UserDiffCallback()) {
+class UsersInfoAdapter(
+    private val selectMode: Boolean = false,
+    initialSelected: Set<Long> = emptySet()
+) : ListAdapter<UserDto, UserViewHolder>(UserDiffCallback()) {
+
+    private val selected = initialSelected.toMutableSet()
+
+    fun getSelectedIds(): List<Long> = selected.toList()
+
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
@@ -29,14 +36,14 @@ class UsersInfoAdapter : ListAdapter<UserDto, UserViewHolder>(UserDiffCallback()
         holder: UserViewHolder,
         position: Int
     ) {
-        holder.bind(getItem(position))
+        holder.bind(getItem(position), selectMode, selected)
     }
 
 
     class UserViewHolder(private val binding: UserInfoCardBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(user: UserDto) = with(binding) {
+        fun bind(user: UserDto, selectMode: Boolean, selected: MutableSet<Long>) = with(binding) {
             userName.text = user.name
             userLogin.text = user.login
 
@@ -49,6 +56,17 @@ class UsersInfoAdapter : ListAdapter<UserDto, UserViewHolder>(UserDiffCallback()
                 avatarImage.isVisible = false
                 avatarInit.isVisible = true
                 avatarInit.text = user.name.take(1).uppercase()
+            }
+            checkbox.isVisible = selectMode
+            if (selectMode) {
+                checkbox.setOnCheckedChangeListener(null)
+                checkbox.isChecked = selected.contains(user.id)
+                checkbox.setOnCheckedChangeListener { _, isChecked ->
+                    if (isChecked) selected.add(user.id) else selected.remove(user.id)
+                }
+                root.setOnClickListener { checkbox.isChecked = !checkbox.isChecked }
+            } else {
+                root.setOnClickListener(null)
             }
         }
     }

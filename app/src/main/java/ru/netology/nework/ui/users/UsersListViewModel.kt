@@ -29,6 +29,8 @@ class UsersListViewModel @Inject constructor(
     private val ids: List<Long> =
         (savedStateHandle.get<LongArray>("userIds") ?: LongArray(0)).toList()
 
+    private val mode: String = savedStateHandle.get<String>("mode") ?: "view"
+
     private val _state = MutableStateFlow(UsersListUiState())
     val state = _state.asStateFlow()
 
@@ -41,7 +43,9 @@ class UsersListViewModel @Inject constructor(
             userRepository.getUsers()
                 .onSuccess { users ->
                     val byId = users.associateBy { it.id }
-                    _state.update { it.copy(loading = false,users=ids.mapNotNull { byId[it] }) }
+                    val result = if (mode == "select") users
+                    else ids.mapNotNull { byId[it] }
+                    _state.update { it.copy(loading = false, users = result) }
                 }
                 .onFailure { error ->
                     _state.update { it.copy(loading = false) }

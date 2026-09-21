@@ -24,6 +24,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import ru.netology.nework.R
 import ru.netology.nework.databinding.FragmentCreatePostBinding
+import ru.netology.nework.ui.users.UsersListFragment
 import ru.netology.nework.util.UrlUtils
 import java.io.File
 
@@ -63,6 +64,17 @@ class CreatePostFragment : Fragment(R.layout.fragment_create_post) {
         setupTextWatcher()
         setupButtons()
         observeState()
+
+        parentFragmentManager.setFragmentResultListener(
+            UsersListFragment.SELECT_USERS_REQUEST_KEY,
+            viewLifecycleOwner
+        ) { _, bundle ->
+            val ids = bundle.getLongArray(UsersListFragment.SELECTED_IDS_KEY)
+                ?.toList()
+                ?: emptyList()
+            viewModel.setMentions(ids)
+
+        }
     }
 
     private fun setupMenu() {
@@ -101,8 +113,17 @@ class CreatePostFragment : Fragment(R.layout.fragment_create_post) {
             attachLauncher.launch("*/*")
         }
         btnMention.setOnClickListener {
-            Toast.makeText(requireContext(), "Отметить пользователя - шаг 3.2", Toast.LENGTH_SHORT)
-                .show()
+//            Toast.makeText(requireContext(), "Отметить пользователя - шаг 3.2", Toast.LENGTH_SHORT)
+//                .show()
+            val bundle = Bundle().apply {
+                putString("title", "Tag user")
+                putString("mode", "select")
+                putLongArray("userIds", viewModel.state.value.mentionIds.toLongArray())
+            }
+            findNavController().navigate(
+                R.id.action_createPostFragment_to_usersListFragment,
+                bundle
+            )
         }
         btnLocation.setOnClickListener {
             Toast.makeText(
@@ -162,6 +183,10 @@ class CreatePostFragment : Fragment(R.layout.fragment_create_post) {
                                 .centerCrop()
                                 .into(binding.newPostAttachmentImage)
                         }
+
+                        binding.mentionCounter.text = if (state.mentionIds.isNotEmpty()) ""
+                        else "Mentioned: ${state.mentionIds.size}"
+                        binding.mentionCounter.isVisible = state.mentionIds.isNotEmpty()
                     }
                 }
                 launch {
