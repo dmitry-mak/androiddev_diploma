@@ -184,7 +184,7 @@ class CreatePostFragment : Fragment(R.layout.fragment_create_post) {
                                 .into(binding.newPostAttachmentImage)
                         }
 
-                        binding.mentionCounter.text = if (state.mentionIds.isNotEmpty()) ""
+                        binding.mentionCounter.text = if (state.mentionIds.isEmpty()) ""
                         else "Mentioned: ${state.mentionIds.size}"
                         binding.mentionCounter.isVisible = state.mentionIds.isNotEmpty()
                     }

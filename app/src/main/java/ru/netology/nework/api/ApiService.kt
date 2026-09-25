@@ -11,6 +11,7 @@ import retrofit2.http.POST
 import retrofit2.http.Part
 import retrofit2.http.Path
 import retrofit2.http.Query
+import ru.netology.nework.dto.CreateEventRequest
 import ru.netology.nework.dto.CreatePostRequest
 import ru.netology.nework.dto.EventDto
 import ru.netology.nework.dto.MediaDto
@@ -73,6 +74,29 @@ interface ApiService {
     //    API EVENTS:
     @GET("api/events")
     suspend fun getEvents(): Response<List<EventDto>>
+
+    @POST("api/events")
+    suspend fun saveEvent(@Body event: CreateEventRequest): Response<EventDto>
+
+    @GET("api/events/{id}")
+    suspend fun getEventById (@Path("id") id: Long): Response<EventDto>
+
+    @DELETE("api/events/{id}")
+    suspend fun deleteEventById(@Path("id") id: Long): Response<Unit>
+
+    @POST("api/events/{id}/likes")
+    suspend fun likeEventById(@Path("id") id: Long): Response<EventDto>
+
+    @DELETE("api/events/{id}/likes")
+    suspend fun unlikeEventById(@Path("id") id: Long): Response<EventDto>
+
+    @POST("api/events/{id}/participants")
+    suspend fun joinEventById(@Path("id") id: Long): Response<EventDto>
+
+    @DELETE("api/events/{id}/participants")
+    suspend fun leaveEventById(@Path("id") id: Long): Response<EventDto>
+
+
 
     //    API USERS:
     @GET("api/users")

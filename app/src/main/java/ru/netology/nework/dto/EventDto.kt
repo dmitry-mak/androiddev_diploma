@@ -20,12 +20,11 @@ data class EventDto(
     val participatedByMe: Boolean = false,
     val attachment: AttachmentDto? = null,
     val link: String? = null,
-    val users: Map<String, UserPreviewDto> = emptyMap()
+    val users: Map<String, UserPreviewDto> = emptyMap(),
+    val ownedByMe: Boolean = false
 )
 
 enum class EventType {
     ONLINE,
     OFFLINE
 }
-
-
