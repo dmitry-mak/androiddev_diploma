@@ -76,6 +76,7 @@ class EventViewHolder(
                     .load(UrlUtils.mediaUrl(event.attachment.url))
                     .centerCrop()
                     .into(attachmentImage)
+                attachmentContainer.setOnClickListener(null)
             }
 
             "VIDEO", "AUDIO" -> {
@@ -85,15 +86,19 @@ class EventViewHolder(
                 attachmentImage.setBackgroundColor(
                     ContextCompat.getColor(itemView.context, R.color.post_media_placeholder)
                 )
+                attachmentContainer.setOnClickListener { onInteractionListener.onPlayMedia(event) }
             }
 
-            else -> attachmentContainer.isVisible = false
-        }
-        attachmentContainer.setOnClickListener {
-            if (event.attachment?.type == "VIDEO" || event.attachment?.type == "AUDIO") {
-                onInteractionListener.onPlayMedia(event)
+            else -> {
+                attachmentContainer.isVisible = false
+                attachmentContainer.setOnClickListener(null)
             }
         }
+//        attachmentContainer.setOnClickListener {
+//            if (event.attachment?.type == "VIDEO" || event.attachment?.type == "AUDIO") {
+//                onInteractionListener.onPlayMedia(event)
+//            }
+//        }
 
         val avatarUrl = UrlUtils.avatarUrl(event.authorAvatar)
         if (avatarUrl != null) {

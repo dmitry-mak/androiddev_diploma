@@ -35,22 +35,39 @@
         android:label="Users">
         <argument
             android:name="userIds"
-            app:argType="long[]"
             android:defaultValue="@null"
-            app:nullable="true"/>
+            app:argType="long[]"
+            app:nullable="true" />
         <argument
             android:name="title"
             app:argType="string" />
         <argument
             android:name="mode"
-            app:argType="string"
-            android:defaultValue="view"/>
+            android:defaultValue="view"
+            app:argType="string" />
     </fragment>
 
     <fragment
         android:id="@+id/eventsFragment"
         android:name="ru.netology.nework.ui.events.EventsFragment"
-        android:label="Events" />
+        android:label="Events">
+        <action
+            android:id="@+id/action_eventsFragment_to_eventDetailFragment"
+            app:destination="@id/eventDetailFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/eventDetailFragment"
+        android:name="ru.netology.nework.ui.events.EventDetailFragment"
+        android:label="event">
+        <argument
+            android:name="eventId"
+            app:argType="long" />
+        <action
+            android:id="@+id/action_eventDetailFragment_to_usersListFragment"
+            app:destination="@+id/usersListFragment" />
+    </fragment>
+
     <fragment
         android:id="@+id/usersFragment"
         android:name="ru.netology.nework.ui.users.UsersFragment"
@@ -88,7 +105,7 @@
             app:argType="long" />
         <action
             android:id="@+id/action_createPostFragment_to_usersListFragment"
-            app:destination="@id/usersListFragment"/>
+            app:destination="@id/usersListFragment" />
     </fragment>
 
 </navigation>

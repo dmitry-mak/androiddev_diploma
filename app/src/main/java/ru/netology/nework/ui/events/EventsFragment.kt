@@ -73,11 +73,17 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
             }
 
             override fun onOpen(event: EventDto) {
-                Toast.makeText(
-                    requireContext(),
-                    "Детали события № ${event.id} - шаг 4.3",
-                    Toast.LENGTH_LONG
-                ).show()
+//                Toast.makeText(
+//                    requireContext(),
+//                    "Детали события № ${event.id} - шаг 4.3",
+//                    Toast.LENGTH_LONG
+//                ).show()
+                val bundle = Bundle().apply {
+                    putLong("eventId", event.id)
+                }
+                findNavController().navigate(
+                    R.id.action_eventsFragment_to_eventDetailFragment, bundle
+                )
             }
 
             override fun onEdit(event: EventDto) {
