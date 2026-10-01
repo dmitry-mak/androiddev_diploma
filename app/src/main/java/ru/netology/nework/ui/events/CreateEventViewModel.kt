@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import ru.netology.nework.dto.AttachmentDto
+import ru.netology.nework.dto.CoordinatesDto
 import ru.netology.nework.dto.CreateEventRequest
 import ru.netology.nework.dto.EventType
 import ru.netology.nework.repository.EventRepository
@@ -20,13 +21,14 @@ import java.time.Instant
 import javax.inject.Inject
 
 
-
 data class CreateEventUiState(
     val eventId: Long = 0L,
     val content: String = "",
+    val link: String = "",
     val dateTimeMillis: Long? = null,
     val type: EventType = EventType.ONLINE,
     val speakerIds: List<Long> = emptyList(),
+    val coords: CoordinatesDto?=null,
     val attachment: AttachmentDto? = null,
     val uploading: Boolean = false,
     val saving: Boolean = false
@@ -61,11 +63,13 @@ class CreateEventViewModel @Inject constructor(
                         it.copy(
                             eventId = event.id,
                             content = event.content,
+                            link = event.link.orEmpty(),
                             dateTimeMillis = runCatching {
                                 Instant.parse(event.datetime).toEpochMilli()
                             }.getOrNull(),
                             type = event.type,
                             speakerIds = event.speakerIds,
+                            coords = event.coords,
                             attachment = event.attachment
                         )
                     }
@@ -101,25 +105,25 @@ class CreateEventViewModel @Inject constructor(
                         )
                     }
                 }
-                .onFailure {error ->
+                .onFailure { error ->
                     _state.update { it.copy(uploading = false) }
                     _error.emit(error.message ?: "Ошибка загрузки")
                 }
         }
     }
 
-    fun removeAttachment()= _state.update { it.copy(attachment = null) }
+    fun removeAttachment() = _state.update { it.copy(attachment = null) }
 
-    fun save(){
+    fun save() {
         val current = _state.value
-        if(current.content.isBlank()){
+        if (current.content.isBlank()) {
             viewModelScope.launch {
                 _error.emit("Описание события не может быть пустым")
             }
             return
         }
         val millis = current.dateTimeMillis
-        if(millis == null){
+        if (millis == null) {
             viewModelScope.launch { _error.emit("Укажите дату и время мероприятия") }
             return
         }
@@ -132,6 +136,8 @@ class CreateEventViewModel @Inject constructor(
                 datetime = Instant.ofEpochMilli(millis).toString(),
                 type = current.type,
                 speakerIds = current.speakerIds,
+                link = current.link.trim().takeIf { it.isNotBlank() },
+                coords = current.coords,
                 attachment = current.attachment
             )
             repository.createEvent(request)

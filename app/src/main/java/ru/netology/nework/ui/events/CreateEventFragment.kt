@@ -10,6 +10,7 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.FileProvider
 import androidx.core.view.MenuProvider
 import androidx.core.view.isVisible
@@ -41,18 +42,6 @@ class CreateEventFragment : Fragment(R.layout.fragment_create_event) {
 
     private var cameraUri: Uri? = null
 
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        _binding = FragmentCreateEventBinding.bind(view)
-
-        setupMenu()
-        setupTextWatchers()
-        setupButtons()
-        setupResultListeners()
-        observeState()
-    }
-
     private val cameraLauncher = registerForActivityResult(
         ActivityResultContracts.TakePicture()
     ) { success ->
@@ -66,6 +55,22 @@ class CreateEventFragment : Fragment(R.layout.fragment_create_event) {
     ) { uri: Uri? ->
         uri?.let { uriToFile(it)?.let(viewModel::attach) }
     }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        _binding = FragmentCreateEventBinding.bind(view)
+
+        val eventId = arguments?.getLong("eventId", 0L) ?: 0L
+        val title = if (eventId != 0L) "Edit event" else "New event"
+        (requireActivity() as AppCompatActivity).supportActionBar?.title = title
+
+        setupMenu()
+        setupTextWatchers()
+        setupButtons()
+        setupResultListeners()
+        observeState()
+    }
+
 
     private fun setupMenu() {
         requireActivity().addMenuProvider(object : MenuProvider {
@@ -124,7 +129,7 @@ class CreateEventFragment : Fragment(R.layout.fragment_create_event) {
     private fun setupTextWatchers() {
         binding.newEventContent.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(string: Editable?) {
-                viewModel.updateContent(string.toString().orEmpty())
+                viewModel.updateContent(string?.toString().orEmpty())
             }
 
             override fun beforeTextChanged(

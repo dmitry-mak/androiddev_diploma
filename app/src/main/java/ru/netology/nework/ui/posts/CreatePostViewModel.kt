@@ -12,6 +12,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import ru.netology.nework.dto.AttachmentDto
+import ru.netology.nework.dto.CoordinatesDto
 import ru.netology.nework.dto.CreatePostRequest
 import ru.netology.nework.repository.MediaRepository
 import ru.netology.nework.repository.PostRepository
@@ -25,6 +26,7 @@ data class CreatePostUiState(
     val link: String = "",
     val attachment: AttachmentDto? = null,
     val previewUri: Uri? = null,
+    val coords: CoordinatesDto?=null,
     val mentionIds: List<Long> = emptyList(),
     val uploading: Boolean = false,
     val saving: Boolean = false
@@ -60,6 +62,7 @@ class CreatePostViewModel @Inject constructor(
                             postId = post.id,
                             content = post.content,
                             link = post.link.orEmpty(),
+                            coords = post.coords,
                             attachment = post.attachment,
                             mentionIds = post.mentionIds
                         )
@@ -135,7 +138,8 @@ class CreatePostViewModel @Inject constructor(
                 content = current.content.trim(),
                 link = current.link.trim().takeIf { it.isNotBlank() },
                 attachment = current.attachment,
-                mentionIds = current.mentionIds
+                mentionIds = current.mentionIds,
+                coords = current.coords
             )
 
             repository.createPost(request)
