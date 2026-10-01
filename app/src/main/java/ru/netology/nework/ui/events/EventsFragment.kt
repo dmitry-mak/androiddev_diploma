@@ -147,8 +147,9 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
     private fun setupFab() {
         binding.fab.setOnClickListener {
             if (viewModel.isAuthorized()) {
-                Toast.makeText(requireContext(), "Создание события- шаг 4.2", Toast.LENGTH_SHORT)
-                    .show()
+//                Toast.makeText(requireContext(), "Создание события- шаг 4.2", Toast.LENGTH_SHORT)
+//                    .show()
+                findNavController().navigate(R.id.action_eventsFragment_to_createEventFragment)
             } else {
                 showAuthDialog()
             }

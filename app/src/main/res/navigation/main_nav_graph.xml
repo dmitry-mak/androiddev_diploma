@@ -54,18 +54,34 @@
         <action
             android:id="@+id/action_eventsFragment_to_eventDetailFragment"
             app:destination="@id/eventDetailFragment" />
+        <action
+            android:id="@+id/action_eventsFragment_to_createEventFragment"
+            app:destination="@id/createEventFragment" />
     </fragment>
 
     <fragment
         android:id="@+id/eventDetailFragment"
         android:name="ru.netology.nework.ui.events.EventDetailFragment"
-        android:label="event">
+        android:label="Event">
         <argument
             android:name="eventId"
             app:argType="long" />
         <action
             android:id="@+id/action_eventDetailFragment_to_usersListFragment"
             app:destination="@+id/usersListFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/createEventFragment"
+        android:name="ru.netology.nework.ui.events.CreateEventFragment"
+        android:label="New event">
+        <argument
+            android:name="eventId"
+            android:defaultValue="0L"
+            app:argType="long" />
+        <action
+            android:id="@+id/action_createEventFragment_to_usersListFragment"
+            app:destination="@id/usersListFragment" />
     </fragment>
 
     <fragment

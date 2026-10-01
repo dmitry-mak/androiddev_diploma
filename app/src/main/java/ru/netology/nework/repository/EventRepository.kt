@@ -4,7 +4,6 @@ import ru.netology.nework.api.ApiService
 import ru.netology.nework.dto.CreateEventRequest
 import ru.netology.nework.dto.EventDto
 import java.io.IOException
-import java.security.interfaces.RSAKey
 import javax.inject.Inject
 import javax.inject.Singleton
 

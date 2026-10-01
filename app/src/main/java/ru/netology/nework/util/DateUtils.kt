@@ -30,4 +30,7 @@ object DateUtils {
         } catch (e: Exception) {
             inputTime
         }
+
+    fun formatMillisForInput(millis: Long): String=
+        timeFormat.withZone(ZoneId.systemDefault()).format(Instant.ofEpochMilli(millis))
 }
