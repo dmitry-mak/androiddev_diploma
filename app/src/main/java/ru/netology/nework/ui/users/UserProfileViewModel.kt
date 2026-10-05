@@ -135,6 +135,19 @@ class UserProfileViewModel @Inject constructor(
         }
     }
 
+    fun reloadJobs() {
+        viewModelScope.launch {
+            val result = if (isMyProfile) userRepository.getMyJobs()
+            else userRepository.getJobs(userId)
+            result.onSuccess { jobs ->
+                _state.update { it.copy(jobs = jobs) }
+            }
+                .onFailure { error ->
+                    _error.emit(error.message ?: "Не удалось обновить работы")
+                }
+        }
+    }
+
     fun deleteJob(job: JobDto) {
         viewModelScope.launch {
             userRepository.deleteMyJob(job.id)

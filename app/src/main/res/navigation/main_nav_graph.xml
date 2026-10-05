@@ -109,7 +109,15 @@
         <action
             android:id="@+id/action_userProfileFragment_to_createPostFragment"
             app:destination="@id/createPostFragment" />
+        <action
+            android:id="@+id/action_userProfileFragment_to_createJobFragment"
+            app:destination="@id/createJobFragment" />
     </fragment>
+
+    <fragment
+        android:id="@+id/createJobFragment"
+        android:name="ru.netology.nework.ui.users.CreateJobFragment"
+        android:label="New Job" />
 
     <fragment
         android:id="@+id/loginFragment"

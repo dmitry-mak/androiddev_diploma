@@ -133,6 +133,7 @@ class UserProfileFragment : Fragment(R.layout.fragment_user_profile) {
                 .setNegativeButton("Отмена", null)
                 .show()
         }
+        binding.jobsList.adapter = jobAdapter
     }
 
     private fun setupObservers() {
@@ -188,14 +189,23 @@ class UserProfileFragment : Fragment(R.layout.fragment_user_profile) {
                         false
                     )
                 }
-
+            }
+        findNavController().currentBackStackEntry?.savedStateHandle
+            ?.getLiveData<Boolean>(JOB_CHANGED_KEY)
+            ?.observe(viewLifecycleOwner){ changed ->
+                if (changed == true){
+                    viewModel.reloadJobs()
+                    findNavController().currentBackStackEntry?.savedStateHandle
+                        ?.set(JOB_CHANGED_KEY, false)
+                }
             }
     }
 
     private fun setupFab() {
         binding.fabAddJob.setOnClickListener {
-            Toast.makeText(requireContext(), "Добавление работы - шаг 5.2", Toast.LENGTH_SHORT)
-                .show()
+//            Toast.makeText(requireContext(), "Добавление работы - шаг 5.2", Toast.LENGTH_SHORT)
+//                .show()
+            findNavController().navigate(R.id.action_userProfileFragment_to_createJobFragment)
         }
     }
 
