@@ -47,7 +47,16 @@ class UsersListFragment : Fragment(R.layout.fragment_users_list) {
             (requireActivity() as AppCompatActivity).supportActionBar?.title = title
         }
 
-        adapter = UsersInfoAdapter(selectMode = isSelected, initialSelected = preselectedIds)
+        adapter = UsersInfoAdapter(
+            selectMode = isSelected,
+            initialSelected = preselectedIds,
+            onUserClick = if (isSelected) null else { user ->
+                val bundle = Bundle().apply { putLong("userId", user.id) }
+                findNavController().navigate(
+                    R.id.action_usersListFragment_to_userProfileFragment, bundle
+                )
+            })
+
         binding.usersList.adapter = adapter
 
         if (isSelected) {

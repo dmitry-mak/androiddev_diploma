@@ -1,6 +1,7 @@
 package ru.netology.nework.adapter
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DiffUtil
@@ -14,7 +15,8 @@ import ru.netology.nework.util.UrlUtils
 
 class UsersInfoAdapter(
     private val selectMode: Boolean = false,
-    initialSelected: Set<Long> = emptySet()
+    initialSelected: Set<Long> = emptySet(),
+    private val onUserClick: ((UserDto) -> Unit)? = null
 ) : ListAdapter<UserDto, UserViewHolder>(UserDiffCallback()) {
 
     private val selected = initialSelected.toMutableSet()
@@ -36,14 +38,19 @@ class UsersInfoAdapter(
         holder: UserViewHolder,
         position: Int
     ) {
-        holder.bind(getItem(position), selectMode, selected)
+        holder.bind(getItem(position), selectMode, selected, onUserClick)
     }
 
 
     class UserViewHolder(private val binding: UserInfoCardBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(user: UserDto, selectMode: Boolean, selected: MutableSet<Long>) = with(binding) {
+        fun bind(
+            user: UserDto,
+            selectMode: Boolean,
+            selected: MutableSet<Long>,
+            onUserClick: ((UserDto) -> Unit)?
+        ) = with(binding) {
             userName.text = user.name
             userLogin.text = user.login
 
@@ -66,22 +73,24 @@ class UsersInfoAdapter(
                 }
                 root.setOnClickListener { checkbox.isChecked = !checkbox.isChecked }
             } else {
-                root.setOnClickListener(null)
+//                root.setOnClickListener(null)
+                root.setOnClickListener {
+                    onUserClick?.invoke(user)
+                }
             }
         }
     }
 
-}
 
-class UserDiffCallback : DiffUtil.ItemCallback<UserDto>() {
-    override fun areItemsTheSame(
-        oldItem: UserDto,
-        newItem: UserDto
-    ) = oldItem.id == newItem.id
+    class UserDiffCallback : DiffUtil.ItemCallback<UserDto>() {
+        override fun areItemsTheSame(
+            oldItem: UserDto,
+            newItem: UserDto
+        ) = oldItem.id == newItem.id
 
-    override fun areContentsTheSame(
-        oldItem: UserDto,
-        newItem: UserDto
-    ) = oldItem == newItem
-
+        override fun areContentsTheSame(
+            oldItem: UserDto,
+            newItem: UserDto
+        ) = oldItem == newItem
+    }
 }

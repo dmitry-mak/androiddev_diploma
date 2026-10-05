@@ -45,6 +45,9 @@
             android:name="mode"
             android:defaultValue="view"
             app:argType="string" />
+        <action
+            android:id="@+id/action_usersListFragment_to_userProfileFragment"
+            app:destination="@id/userProfileFragment" />
     </fragment>
 
     <fragment
@@ -87,7 +90,26 @@
     <fragment
         android:id="@+id/usersFragment"
         android:name="ru.netology.nework.ui.users.UsersFragment"
-        android:label="Users" />
+        android:label="Users">
+        <action
+            android:id="@+id/action_usersFragment_to_userProfileFragment"
+            app:destination="@id/userProfileFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/userProfileFragment"
+        android:name="ru.netology.nework.ui.users.UserProfileFragment"
+        android:label="Profile">
+        <argument
+            android:name="userId"
+            app:argType="long" />
+        <action
+            android:id="@+id/action_userProfileFragment_to_postDetailFragment"
+            app:destination="@id/postDetailFragment" />
+        <action
+            android:id="@+id/action_userProfileFragment_to_createPostFragment"
+            app:destination="@id/createPostFragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/loginFragment"

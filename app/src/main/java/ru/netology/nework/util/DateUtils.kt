@@ -3,6 +3,8 @@ package ru.netology.nework.util
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.time.Instant
+import java.util.Locale
+
 
 object DateUtils {
 
@@ -10,12 +12,15 @@ object DateUtils {
     private val dateFormat = DateTimeFormatter.ofPattern("dd MMM yyyy")
 
     private val timeShortFormat = DateTimeFormatter.ofPattern("dd.MM.yy HH:mm")
+
+
     fun formatTimeForOutput(inputTime: String): String =
         try {
             timeFormat.withZone(ZoneId.systemDefault()).format(Instant.parse(inputTime))
         } catch (e: Exception) {
             inputTime
         }
+
 
     fun formatDateForOutput(inputDate: String): String =
         try {
@@ -24,6 +29,11 @@ object DateUtils {
             inputDate
         }
 
+    fun formatJobPeriod(start: String, finish: String?): String= buildString {
+        append(formatDateForOutput(start))
+        append(" - ")
+        append( finish?.let { formatDateForOutput(it) } ?: "НВ")
+    }
     fun formatTimeShort(inputTime: String): String =
         try {
             timeShortFormat.withZone(ZoneId.systemDefault()).format(Instant.parse(inputTime))

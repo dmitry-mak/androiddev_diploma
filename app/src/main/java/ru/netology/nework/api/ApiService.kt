@@ -14,6 +14,7 @@ import retrofit2.http.Query
 import ru.netology.nework.dto.CreateEventRequest
 import ru.netology.nework.dto.CreatePostRequest
 import ru.netology.nework.dto.EventDto
+import ru.netology.nework.dto.JobDto
 import ru.netology.nework.dto.MediaDto
 import ru.netology.nework.dto.PostDto
 import ru.netology.nework.dto.TokenDto
@@ -79,7 +80,7 @@ interface ApiService {
     suspend fun saveEvent(@Body event: CreateEventRequest): Response<EventDto>
 
     @GET("api/events/{id}")
-    suspend fun getEventById (@Path("id") id: Long): Response<EventDto>
+    suspend fun getEventById(@Path("id") id: Long): Response<EventDto>
 
     @DELETE("api/events/{id}")
     suspend fun deleteEventById(@Path("id") id: Long): Response<Unit>
@@ -97,10 +98,58 @@ interface ApiService {
     suspend fun leaveEventById(@Path("id") id: Long): Response<EventDto>
 
 
-
     //    API USERS:
     @GET("api/users")
     suspend fun getUsers(): Response<List<UserDto>>
+
+
+    // API WALL
+    @GET("api/{authorId}/wall")
+    suspend fun getUserWall(@Path("authorId") authorId: Long): Response<List<PostDto>>
+
+    @POST("api/{authorId}/wall/{id}/likes")
+    suspend fun likeWallPostById(
+        @Path("authorId") authorId: Long,
+        @Path("id") id: Long
+    ): Response<PostDto>
+
+    @DELETE("api/{authorId}/wall/{id}/likes")
+    suspend fun unlikeWallPostById(
+        @Path("authorId") authorId: Long,
+        @Path("id") id: Long
+    ): Response<PostDto>
+
+
+//    API MY_WALL
+
+    @GET("api/my/wall")
+    suspend fun getMyWall(): Response<List<PostDto>>
+
+    @POST("api/my/wall/{id}/likes")
+    suspend fun likeMyWallPostById(
+        @Path("id") id: Long
+    ): Response<PostDto>
+
+    @DELETE("api/my/wall/{id}/likes")
+    suspend fun unlikeMyWallPostById(
+        @Path("id") id: Long
+    ): Response<PostDto>
+
+
+//    API JOBS
+
+    @GET("api/{userId}/jobs")
+    suspend fun getUserJobs(@Path("userId") userId: Long): Response<List<JobDto>>
+
+    @GET("api/my/jobs")
+    suspend fun getMyJobs(): Response<List<JobDto>>
+
+    @POST("api/my/jobs")
+    suspend fun saveMyJob(@Body job: JobDto): Response<JobDto>
+
+    @DELETE("/api/my/jobs/{id}")
+    suspend fun deleteMyJobById(@Path("id")id: Long): Response<Unit>
+
 
 
 }
