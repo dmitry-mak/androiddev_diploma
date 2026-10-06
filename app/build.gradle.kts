@@ -1,3 +1,4 @@
+import com.android.tools.r8.internal.im
 import java.util.Properties
 
 plugins {
@@ -17,6 +18,13 @@ val localProperties = Properties().apply {
 val apiBaseUrl = localProperties.getProperty("BASE_URL", "http://94.228.125.136:8080/")
 val apiKey = localProperties.getProperty("API_KEY", "")
 
+val mapsProperties = Properties().apply {
+    val mapsFile = rootProject.file("maps.properties")
+    if(mapsFile.exists()){
+        mapsFile.inputStream().use { load(it) }
+    }
+}
+
 android {
     namespace = "ru.netology.nework"
     compileSdk {
@@ -34,6 +42,8 @@ android {
 
         buildConfigField("String", "BASE_URL", "\"$apiBaseUrl\"")
         buildConfigField("String", "API_KEY","\"$apiKey\"")
+
+        manifestPlaceholders["mapsApiKey"] = mapsProperties.getProperty("MAPS_API_KEY", "")
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -86,6 +96,15 @@ dependencies {
     implementation(libs.glide)
     implementation(libs.androidx.recyclerview)
     implementation(libs.androidx.swiperefreshlayout)
+
+    implementation(libs.play.services.maps)
+    implementation(libs.play.services.location)
+    implementation(libs.maps.ktx)
+    implementation(libs.maps.utils.ktx)
+
+    implementation(libs.androidx.room.runtime)
+    implementation(libs.androidx.room.ktx)
+    ksp(libs.androidx.room.compiler)
 
     implementation(libs.hilt.android)
     ksp(libs.hilt.compiler)

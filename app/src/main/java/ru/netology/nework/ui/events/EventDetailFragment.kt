@@ -30,6 +30,7 @@ import ru.netology.nework.dto.EventDto
 import ru.netology.nework.dto.EventType
 import ru.netology.nework.ui.common.AvatarItem
 import ru.netology.nework.ui.common.bindAvatarRow
+import ru.netology.nework.ui.maps.showDetailMap
 import ru.netology.nework.util.DateUtils
 import ru.netology.nework.util.UrlUtils
 
@@ -176,7 +177,8 @@ class EventDetailFragment : Fragment(R.layout.fragment_event_detail) {
             ) {
                 navigateToUsers(event.participantsIds.toLongArray(), "Participants")
             }
-            mapPlaceholder.isVisible = event.coords != null
+//            mapPlaceholder.isVisible = event.coords != null
+        showDetailMap(mapContainer,event.coords)
         }
     }
 

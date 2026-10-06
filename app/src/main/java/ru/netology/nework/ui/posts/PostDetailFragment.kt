@@ -26,6 +26,7 @@ import ru.netology.nework.databinding.FragmentPostDetailBinding
 import ru.netology.nework.dto.PostDto
 import ru.netology.nework.ui.common.AvatarItem
 import ru.netology.nework.ui.common.bindAvatarRow
+import ru.netology.nework.ui.maps.showDetailMap
 import ru.netology.nework.util.DateUtils
 import ru.netology.nework.util.UrlUtils
 import kotlin.getValue
@@ -142,7 +143,7 @@ class PostDetailFragment : Fragment(R.layout.fragment_post_detail) {
 //                row = likedRow,
 //                users = state.likersList.map { AvatarBlock(it.name, it.avatar) }
 //            ) { navigateToUsers(post.likeOwnerIds.toLongArray(), "Likers") }
-            bindAvatarRow(likedRow, state.likersList.map { AvatarItem(it.name, it.avatar) }){
+            bindAvatarRow(likedRow, state.likersList.map { AvatarItem(it.name, it.avatar) }) {
                 navigateToUsers(post.likeOwnerIds.toLongArray(), "Likers")
             }
 
@@ -154,12 +155,11 @@ class PostDetailFragment : Fragment(R.layout.fragment_post_detail) {
 //            ) {
 //                navigateToUsers(post.mentionIds.toLongArray(), "Mentioned")
 //            }
-            bindAvatarRow(mentionedRow,state.mentioned.map { AvatarItem(it.name,it.avatar) }){
+            bindAvatarRow(mentionedRow, state.mentioned.map { AvatarItem(it.name, it.avatar) }) {
                 navigateToUsers(post.mentionIds.toLongArray(), "Mentioned")
             }
-
+            showDetailMap(mapContainer, post.coords)
         }
-
     }
 
     private data class AvatarBlock(val name: String, val avatar: String?)
