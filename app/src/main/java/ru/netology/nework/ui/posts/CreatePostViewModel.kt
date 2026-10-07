@@ -26,7 +26,7 @@ data class CreatePostUiState(
     val link: String = "",
     val attachment: AttachmentDto? = null,
     val previewUri: Uri? = null,
-    val coords: CoordinatesDto?=null,
+    val coords: CoordinatesDto? = null,
     val mentionIds: List<Long> = emptyList(),
     val uploading: Boolean = false,
     val saving: Boolean = false
@@ -153,4 +153,6 @@ class CreatePostViewModel @Inject constructor(
                 }
         }
     }
+
+    fun setCoords(coords: CoordinatesDto?) = _state.update { it.copy(coords = coords) }
 }

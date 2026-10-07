@@ -25,11 +25,14 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import ru.netology.nework.R
 import ru.netology.nework.databinding.FragmentCreateEventBinding
+import ru.netology.nework.dto.CoordinatesDto
 import ru.netology.nework.dto.EventType
+import ru.netology.nework.ui.maps.MapPickerFragment
 import ru.netology.nework.ui.users.UsersListFragment
 import ru.netology.nework.util.DateUtils
 import ru.netology.nework.util.UrlUtils
 import java.io.File
+import java.util.Locale
 import kotlin.getValue
 
 
@@ -69,6 +72,18 @@ class CreateEventFragment : Fragment(R.layout.fragment_create_event) {
         setupButtons()
         setupResultListeners()
         observeState()
+
+        parentFragmentManager.setFragmentResultListener(
+            MapPickerFragment.REQUEST_KEY,
+            viewLifecycleOwner
+        ) { _, bundle ->
+            viewModel.setCoords(
+                CoordinatesDto(
+                    lat = bundle.getDouble(MapPickerFragment.KEY_LAT),
+                    lng = bundle.getDouble(MapPickerFragment.KEY_LONG)
+                )
+            )
+        }
     }
 
 
@@ -115,10 +130,8 @@ class CreateEventFragment : Fragment(R.layout.fragment_create_event) {
                     bundle
                 )
             }
-            btnLocation.setOnClickListener {
-                Toast.makeText(requireContext(), "Добавление карт в разработке", Toast.LENGTH_SHORT)
-                    .show()
-            }
+            btnLocation.setOnClickListener { openCoordsPicker() }
+            coordsRow.setOnClickListener { openCoordsPicker() }
 
             btnRemoveAttachment.setOnClickListener { viewModel.removeAttachment() }
 
@@ -204,6 +217,12 @@ class CreateEventFragment : Fragment(R.layout.fragment_create_event) {
                         binding.speakersCount.isVisible = state.speakerIds.isNotEmpty()
                         binding.speakersCount.text = if (state.speakerIds.isEmpty()) ""
                         else "Speakers: ${state.speakerIds.size}"
+
+                        val coords = state.coords
+                        binding.coordsRow.isVisible = coords != null
+                        if(coords !=null){
+                            binding.coordsRow.text = String.format(Locale.getDefault(), "%.4f, %.4f", coords.lat, coords.lng)
+                        }
                     }
                 }
                 launch {
@@ -245,6 +264,16 @@ class CreateEventFragment : Fragment(R.layout.fragment_create_event) {
             Toast.makeText(requireContext(), "Не удалось открыть файл", Toast.LENGTH_SHORT).show()
             null
         }
+    }
+
+    private fun openCoordsPicker() {
+        val coords = viewModel.state.value.coords
+        val bundle = Bundle().apply {
+            putBoolean("hasCoords", coords != null)
+            putDouble("arg_lat", coords?.lat ?: 0.0)
+            putDouble("arg_lng", coords?.lng ?: 0.0)
+        }
+        findNavController().navigate(R.id.action_createEventFragment_to_mapPickerFragment, bundle)
     }
 
     override fun onDestroyView() {

@@ -28,7 +28,7 @@ data class CreateEventUiState(
     val dateTimeMillis: Long? = null,
     val type: EventType = EventType.ONLINE,
     val speakerIds: List<Long> = emptyList(),
-    val coords: CoordinatesDto?=null,
+    val coords: CoordinatesDto? = null,
     val attachment: AttachmentDto? = null,
     val uploading: Boolean = false,
     val saving: Boolean = false
@@ -151,4 +151,6 @@ class CreateEventViewModel @Inject constructor(
                 }
         }
     }
+
+    fun setCoords(coords: CoordinatesDto?) = _state.update { it.copy(coords = coords) }
 }

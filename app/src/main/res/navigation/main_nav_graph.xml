@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main_nav_graph"
     app:startDestination="@id/postsFragment">
 
@@ -85,6 +86,9 @@
         <action
             android:id="@+id/action_createEventFragment_to_usersListFragment"
             app:destination="@id/usersListFragment" />
+        <action
+            android:id="@+id/action_createEventFragment_to_mapPickerFragment"
+            app:destination="@id/mapPickerFragment" />
     </fragment>
 
     <fragment
@@ -152,6 +156,16 @@
         <action
             android:id="@+id/action_createPostFragment_to_usersListFragment"
             app:destination="@id/usersListFragment" />
+        <action
+            android:id="@+id/action_createPostFragment_to_mapPickerFragment"
+            app:destination="@id/mapPickerFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/mapPickerFragment"
+        android:name="ru.netology.nework.ui.maps.MapPickerFragment"
+        android:label="Select location"
+        tools:layout="@layout/fragment_map_coords_picker">
     </fragment>
 
 </navigation>

@@ -55,8 +55,21 @@
                 android:textSize="14sp"
                 android:visibility="gone"
                 tools:text="Speakers: 3"
-                tools:visibility="visible"/>
-            
+                tools:visibility="visible" />
+
+            <TextView
+                android:id="@+id/coords_row"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:background="?attr/selectableItemBackground"
+                android:paddingVertical="4dp"
+                android:textColor="#6C4CB4"
+                android:textSize="14sp"
+                android:visibility="gone"
+                tools:text="55.7558, 37.6173"
+                tools:visibility="visible" />
+
             <FrameLayout
                 android:id="@+id/new_event_attachment_container"
                 android:layout_width="match_parent"
@@ -69,7 +82,7 @@
                     android:id="@+id/new_event_attachment_image"
                     android:layout_width="match_parent"
                     android:layout_height="240dp"
-                    android:scaleType="centerCrop"/>
+                    android:scaleType="centerCrop" />
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btn_remove_attachment"
@@ -87,7 +100,7 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="8dp"
                 android:visibility="gone"
-                tools:visibility="visible"/>
+                tools:visibility="visible" />
         </LinearLayout>
     </ScrollView>
 

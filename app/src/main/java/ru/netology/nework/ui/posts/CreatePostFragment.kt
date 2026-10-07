@@ -24,9 +24,12 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import ru.netology.nework.R
 import ru.netology.nework.databinding.FragmentCreatePostBinding
+import ru.netology.nework.dto.CoordinatesDto
+import ru.netology.nework.ui.maps.MapPickerFragment
 import ru.netology.nework.ui.users.UsersListFragment
 import ru.netology.nework.util.UrlUtils
 import java.io.File
+import java.util.Locale
 
 @AndroidEntryPoint
 class CreatePostFragment : Fragment(R.layout.fragment_create_post) {
@@ -73,7 +76,17 @@ class CreatePostFragment : Fragment(R.layout.fragment_create_post) {
                 ?.toList()
                 ?: emptyList()
             viewModel.setMentions(ids)
-
+        }
+        parentFragmentManager.setFragmentResultListener(
+            MapPickerFragment.REQUEST_KEY,
+            viewLifecycleOwner
+        ) { _, bundle ->
+            viewModel.setCoords(
+                CoordinatesDto(
+                    lat = bundle.getDouble(MapPickerFragment.KEY_LAT),
+                    lng = bundle.getDouble(MapPickerFragment.KEY_LONG)
+                )
+            )
         }
     }
 
@@ -97,7 +110,6 @@ class CreatePostFragment : Fragment(R.layout.fragment_create_post) {
 
     private fun setupButtons() = with(binding) {
         btnAddPhoto.setOnClickListener {
-            //            Toast.makeText(requireContext(), "Добавление фото - шаг 3.2", Toast.LENGTH_SHORT).show()
             val file = File(requireContext().cacheDir, "photo_${System.currentTimeMillis()}.jpg")
             cameraUri = FileProvider.getUriForFile(
                 requireContext(),
@@ -108,13 +120,9 @@ class CreatePostFragment : Fragment(R.layout.fragment_create_post) {
         }
 
         btnAttach.setOnClickListener {
-//            Toast.makeText(requireContext(), "Добавление файла - шаг 3.2", Toast.LENGTH_SHORT)
-//                .show()
             attachLauncher.launch("*/*")
         }
         btnMention.setOnClickListener {
-//            Toast.makeText(requireContext(), "Отметить пользователя - шаг 3.2", Toast.LENGTH_SHORT)
-//                .show()
             val bundle = Bundle().apply {
                 putString("title", "Tag user")
                 putString("mode", "select")
@@ -125,18 +133,10 @@ class CreatePostFragment : Fragment(R.layout.fragment_create_post) {
                 bundle
             )
         }
-        btnLocation.setOnClickListener {
-            Toast.makeText(
-                requireContext(),
-                "Добавление локации - после подключения карт",
-                Toast.LENGTH_SHORT
-            ).show()
-        }
-        btnRemoveAttachment.setOnClickListener {
-//            Toast.makeText(requireContext(), "Удаление вложения - шаг 3.2", Toast.LENGTH_SHORT)
-//                .show()
-            viewModel.removeAttachment()
-        }
+
+        btnLocation.setOnClickListener { openCoordsPicker() }
+        coordsRow.setOnClickListener { openCoordsPicker() }
+        btnRemoveAttachment.setOnClickListener { viewModel.removeAttachment() }
     }
 
     private fun setupTextWatcher() {
@@ -187,6 +187,12 @@ class CreatePostFragment : Fragment(R.layout.fragment_create_post) {
                         binding.mentionCounter.text = if (state.mentionIds.isEmpty()) ""
                         else "Mentioned: ${state.mentionIds.size}"
                         binding.mentionCounter.isVisible = state.mentionIds.isNotEmpty()
+
+                        val coords = state.coords
+                        binding.coordsRow.isVisible = coords != null
+                        if(coords !=null){
+                            binding.coordsRow.text = String.format(Locale.getDefault(), "%.4f, %.4f", coords.lat, coords.lng)
+                        }
                     }
                 }
                 launch {
@@ -225,6 +231,16 @@ class CreatePostFragment : Fragment(R.layout.fragment_create_post) {
             Toast.makeText(requireContext(), "Не удалось открыть файл", Toast.LENGTH_SHORT).show()
             null
         }
+    }
+
+    private fun openCoordsPicker() {
+        val coords = viewModel.state.value.coords
+        val bundle = Bundle().apply {
+            putBoolean("hasCoords", coords != null)
+            putDouble("arg_lat", coords?.lat ?: 0.0)
+            putDouble("arg_lng", coords?.lng ?: 0.0)
+        }
+        findNavController().navigate(R.id.action_createPostFragment_to_mapPickerFragment, bundle)
     }
 
     override fun onDestroyView() {
