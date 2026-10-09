@@ -23,23 +23,18 @@ class AppAuth @Inject constructor(
     init {
         val id = prefs.getLong(KEY_ID, 0)
         val token = prefs.getString(KEY_TOKEN, null)
-//        Раскоментировать после подключения загрузки изображений:
-//        val avatar = prefs.getString(KEY_AVATAR, null)
-
+        val avatar = prefs.getString(KEY_AVATAR, null)
         if (id != 0L && !token.isNullOrEmpty()) {
-//            Раскоментировать после подключения загрузки изображений:
-//            _authStateFlow.value = AuthState(id, token, avatar)
-            _authStateFlow.value = AuthState(id, token)
+            _authStateFlow.value = AuthState(id, token, avatar)
         }
     }
 
-    fun setAuth(id: Long, token: String) {
-        _authStateFlow.value = AuthState(id, token)
+    fun setAuth(id: Long, token: String, avatar: String? = null) {
+        _authStateFlow.value = AuthState(id, token, avatar)
         prefs.edit {
             putLong(KEY_ID, id)
             putString(KEY_TOKEN, token)
-//            Раскоментировать после подключения загрузки изображений:
-//            putString(KEY_AVATAR, avatar)
+            putString(KEY_AVATAR, avatar)
         }
     }
 
@@ -48,6 +43,7 @@ class AppAuth @Inject constructor(
         prefs.edit {
             putLong(KEY_ID, 0)
             putString(KEY_TOKEN, null)
+            putString(KEY_AVATAR,null)
         }
     }
 
@@ -62,6 +58,5 @@ class AppAuth @Inject constructor(
 data class AuthState(
     val id: Long = 0L,
     val token: String? = null,
-//    Раскоментировать после подключения загрузки изображений:
-//    val avatar: String? = null
+    val avatar: String? = null
 )

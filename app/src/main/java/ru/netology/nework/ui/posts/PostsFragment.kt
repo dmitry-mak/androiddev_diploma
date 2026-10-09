@@ -13,6 +13,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
+import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
@@ -48,7 +49,8 @@ class PostsFragment : Fragment(R.layout.fragment_posts) {
 
     private fun setupSwipeRefresh() {
         binding.swipeRefresh.setOnRefreshListener {
-            viewModel.loadPosts()
+//            viewModel.loadPosts()
+            adapter.refresh()
         }
     }
 
@@ -80,9 +82,6 @@ class PostsFragment : Fragment(R.layout.fragment_posts) {
             }
 
             override fun onOpen(post: PostDto) {
-                // прописать на шаге №3 - навигация в детали поста
-//                Toast.makeText(requireContext(), "Детали поста № ${post.id}", Toast.LENGTH_SHORT)
-//                    .show()
                 val bundle = Bundle().apply { putLong("postId", post.id) }
                 findNavController().navigate(
                     R.id.action_postsFragment_to_postDetailFragment,
@@ -91,8 +90,6 @@ class PostsFragment : Fragment(R.layout.fragment_posts) {
             }
 
             override fun onEdit(post: PostDto) {
-                //                прописать на шаге №3 - навигация в редактирование поста
-//                Toast.makeText(requireContext(), "Редактирование поста", Toast.LENGTH_SHORT).show()
                 val bundle = Bundle().apply { putLong("postId", post.id) }
                 findNavController().navigate(
                     R.id.action_postsFragment_to_createPostFragment,
@@ -117,27 +114,49 @@ class PostsFragment : Fragment(R.layout.fragment_posts) {
                 startActivity(intent)
             }
         })
-        binding.postsList.adapter = adapter
+        binding.postsList.adapter = adapter.withLoadStateFooter(
+            PostsLoadStateAdapter { adapter.retry() }
+        )
     }
 
     private fun setupObservers() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.state.collect { state ->
-                    binding.swipeRefresh.isRefreshing = state.loading
-                    binding.progress.isVisible = state.loading && state.posts.isEmpty()
-                    binding.empty.isVisible = !state.loading && state.posts.isEmpty()
-                    adapter.submitList(state.posts)
+//                viewModel.state.collect { state ->
+//                    binding.swipeRefresh.isRefreshing = state.loading
+//                    binding.progress.isVisible = state.loading && state.posts.isEmpty()
+//                    binding.empty.isVisible = !state.loading && state.posts.isEmpty()
+//                    adapter.submitList(state.posts)
+//                }
+                launch {
+                    viewModel.pagingPosts.collect { pagingData ->
+                        adapter.submitData(pagingData)
+                    }
+                }
+                launch {
+                    adapter.loadStateFlow.collect { states ->
+                        val refresh = states.refresh
+                        binding.swipeRefresh.isRefreshing = refresh is LoadState.Loading
+                        binding.progress.isVisible =
+                            refresh is LoadState.Loading && adapter.itemCount == 0
+                        binding.empty.isVisible =
+                            refresh is LoadState.NotLoading && adapter.itemCount == 0
+                    }
+                }
+                launch {
+                    viewModel.error.collect { message ->
+                        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+                    }
                 }
             }
         }
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.error.collect { message ->
-                    Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
-                }
-            }
-        }
+//        viewLifecycleOwner.lifecycleScope.launch {
+//            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+//                viewModel.error.collect { message ->
+//                    Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+//                }
+//            }
+//        }
     }
 
     private fun setupPostChangedListener() {
@@ -145,7 +164,8 @@ class PostsFragment : Fragment(R.layout.fragment_posts) {
             ?.getLiveData<Boolean>(CreatePostFragment.IS_POST_CHANGED)
             ?.observe(viewLifecycleOwner) { postChanged ->
                 if (postChanged == true) {
-                    viewModel.loadPosts()
+//                    viewModel.loadPosts()
+                    adapter.refresh()
                     findNavController().currentBackStackEntry?.savedStateHandle
                         ?.set(CreatePostFragment.IS_POST_CHANGED, false)
                 }

@@ -52,7 +52,5 @@ class UsersListViewModel @Inject constructor(
                     _error.emit(error.message ?: "Не удалось загрузить список пользователей")
                 }
         }
-
     }
-
 }

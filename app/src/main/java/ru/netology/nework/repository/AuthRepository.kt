@@ -25,7 +25,7 @@ class AuthRepository @Inject constructor(
         if (response.isSuccessful) {
             val responseBody =
                 response.body() ?: return Result.failure(AuthException("Empty response body"))
-            appAuth.setAuth(responseBody.id, responseBody.token)
+            appAuth.setAuth(responseBody.id, responseBody.token, responseBody.avatar)
             Result.success(Unit)
         } else {
             Result.failure(AuthException(loginErrorMessage(response.code())))
@@ -51,7 +51,7 @@ class AuthRepository @Inject constructor(
         if (response.isSuccessful) {
             val responseBody = response.body()
                 ?: return Result.failure(AuthException("Пустой ответ от сервера"))
-            appAuth.setAuth(responseBody.id, responseBody.token)
+            appAuth.setAuth(responseBody.id, responseBody.token, responseBody.avatar)
             Result.success(Unit)
         } else {
             Result.failure(AuthException(registerErrorMessage(response.code())))
@@ -81,7 +81,7 @@ class AuthRepository @Inject constructor(
 
     private fun Uri.toMultipartPart(): MultipartBody.Part? {
         val resolver = context.contentResolver
-        val mime =resolver.getType(this) ?: "image/jpg"
+        val mime = resolver.getType(this) ?: "image/jpg"
         val bytes = resolver.openInputStream(this)?.use {
             it.readBytes()
         } ?: return null

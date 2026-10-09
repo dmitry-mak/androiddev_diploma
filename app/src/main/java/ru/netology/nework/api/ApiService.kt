@@ -53,6 +53,18 @@ interface ApiService {
     @GET("api/posts/{id}/newer")
     suspend fun getNewerPosts(@Path("id") id: Long): Response<List<PostDto>>
 
+    @GET("api/posts/{id}/before")
+    suspend fun getBeforeId(
+        @Path("id") id: Long,
+        @Query("count") count: Int
+    ): Response<List<PostDto>>
+
+    @GET("api/posts/{id}/after")
+    suspend fun getAfterId(
+        @Path("id") id: Long,
+        @Query("count") count: Int
+    ): Response<List<PostDto>>
+
     @GET("api/posts/{id}")
     suspend fun getPostById(@Path("id") id: Long): Response<PostDto>
 
@@ -148,8 +160,7 @@ interface ApiService {
     suspend fun saveMyJob(@Body job: JobDto): Response<JobDto>
 
     @DELETE("/api/my/jobs/{id}")
-    suspend fun deleteMyJobById(@Path("id")id: Long): Response<Unit>
-
+    suspend fun deleteMyJobById(@Path("id") id: Long): Response<Unit>
 
 
 }

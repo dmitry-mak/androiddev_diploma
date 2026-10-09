@@ -23,7 +23,7 @@ import kotlinx.coroutines.launch
 import ru.netology.nework.R
 import ru.netology.nework.adapter.JobAdapter
 import ru.netology.nework.adapter.OnPostInteractionListener
-import ru.netology.nework.adapter.PostAdapter
+import ru.netology.nework.adapter.WallPostAdapter
 import ru.netology.nework.databinding.FragmentUserProfileBinding
 import ru.netology.nework.dto.PostDto
 import ru.netology.nework.util.UrlUtils
@@ -38,7 +38,7 @@ class UserProfileFragment : Fragment(R.layout.fragment_user_profile) {
     private var _binding: FragmentUserProfileBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var postAdapter: PostAdapter
+    private lateinit var postAdapter: WallPostAdapter
     private lateinit var jobAdapter: JobAdapter
 
     private var authDialog: AlertDialog? = null
@@ -72,7 +72,7 @@ class UserProfileFragment : Fragment(R.layout.fragment_user_profile) {
 
     private fun setupAdapters() {
         binding.wallList.layoutManager = LinearLayoutManager(requireContext())
-        postAdapter = PostAdapter(object : OnPostInteractionListener {
+        postAdapter = WallPostAdapter(object : OnPostInteractionListener {
 
             override fun onLike(post: PostDto) {
                 if (viewModel.isAuthorized()) viewModel.like(post) else showAuthDialog()
@@ -203,8 +203,6 @@ class UserProfileFragment : Fragment(R.layout.fragment_user_profile) {
 
     private fun setupFab() {
         binding.fabAddJob.setOnClickListener {
-//            Toast.makeText(requireContext(), "Добавление работы - шаг 5.2", Toast.LENGTH_SHORT)
-//                .show()
             findNavController().navigate(R.id.action_userProfileFragment_to_createJobFragment)
         }
     }

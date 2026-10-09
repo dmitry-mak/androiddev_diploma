@@ -30,7 +30,6 @@ class UsersListFragment : Fragment(R.layout.fragment_users_list) {
     private var _binding: FragmentUsersListBinding? = null
     private val binding get() = _binding!!
 
-    //    private val adapter = UsersInfoAdapter()
     private lateinit var adapter: UsersInfoAdapter
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -42,7 +41,6 @@ class UsersListFragment : Fragment(R.layout.fragment_users_list) {
         val preselectedIds = arguments?.getLongArray("userIds")?.toSet() ?: emptySet()
         val isSelected = mode == "select"
 
-//        if (!title.isNullOrBlank()) {
         if (title != null) {
             (requireActivity() as AppCompatActivity).supportActionBar?.title = title
         }

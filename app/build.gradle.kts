@@ -94,6 +94,7 @@ dependencies {
     implementation(libs.logging.interceptor)
 
     implementation(libs.glide)
+    implementation(libs.glide.okhttp)
     implementation(libs.androidx.recyclerview)
     implementation(libs.androidx.swiperefreshlayout)
 
@@ -104,6 +105,8 @@ dependencies {
 
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)
+    implementation(libs.androidx.room.paging)
+    implementation(libs.androidx.paging.runtime.ktx)
     ksp(libs.androidx.room.compiler)
 
     implementation(libs.hilt.android)

@@ -1,5 +1,6 @@
 package ru.netology.nework.ui.auth
 
+import android.net.Uri
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -7,12 +8,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
+import com.bumptech.glide.Glide
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import ru.netology.nework.R
@@ -27,6 +30,19 @@ class RegisterFragment : Fragment() {
     private val viewModel: AuthViewModel by viewModels()
     private var _binding: FragmentRegisterScreenBinding? = null
     private val binding get() = _binding!!
+
+    private var avatarUri: Uri? = null
+    private val avatarLauncher = registerForActivityResult(
+        ActivityResultContracts.GetContent()
+    ) { uri: Uri ->
+        uri?.let {
+            avatarUri = it
+            Glide.with(binding.uploadAvatar)
+                .load(it)
+                .circleCrop()
+                .into(binding.uploadAvatar)
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -85,6 +101,9 @@ class RegisterFragment : Fragment() {
             if (hasFocus)
                 clearErrors()
         }
+
+        binding.uploadAvatar.setOnClickListener { avatarLauncher.launch("image/*") }
+
         binding.etPassword.setOnFocusChangeListener { _, hasFocus ->
             if (hasFocus)
                 clearErrors()
@@ -104,7 +123,7 @@ class RegisterFragment : Fragment() {
                     login = login,
                     name = name,
                     password = password,
-                    avatarUri = null
+                    avatarUri = avatarUri
                 )
             }
         }

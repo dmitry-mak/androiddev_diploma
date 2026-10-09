@@ -5,6 +5,7 @@ import android.view.ViewGroup
 import androidx.appcompat.widget.PopupMenu
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
+import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -28,24 +29,32 @@ interface OnPostInteractionListener {
 
 class PostAdapter(
     private val onInteractionListener: OnPostInteractionListener
-) : ListAdapter<PostDto, PostViewHolder>(PostDiffCallback()) {
+//) : ListAdapter<PostDto, PostViewHolder>(PostDiffCallback()) {
+) : PagingDataAdapter<PostDto, PostViewHolder>(PostDiffCallback()) {
+
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
-    ): PostViewHolder {
-        val binding = PostCardBinding.inflate(
-            LayoutInflater.from(parent.context),
-            parent,
-            false
-        )
-        return PostViewHolder(
-            binding, onInteractionListener
-        )
-    }
+    ): PostViewHolder = PostViewHolder(
+        PostCardBinding.inflate(LayoutInflater.from(parent.context), parent, false),
+        onInteractionListener
+    )
+//{
+//        val binding = PostCardBinding.inflate(
+//            LayoutInflater.from(parent.context),
+//            parent,
+//            false
+//        )
+//        return PostViewHolder(
+//            binding, onInteractionListener
+//        )
+//    }
+
 
     override fun onBindViewHolder(holder: PostViewHolder, possition: Int) {
-        holder.bind(getItem(possition))
+//        holder.bind(getItem(possition))
+        getItem(possition)?.let { holder.bind(it) }
     }
 }
 

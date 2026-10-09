@@ -139,22 +139,14 @@ class PostDetailFragment : Fragment(R.layout.fragment_post_detail) {
 
             likedList.isVisible = post.likeOwnerIds.isNotEmpty()
             likedCount.text = post.likeOwnerIds.size.toString()
-//            fillAvatarRow(
-//                row = likedRow,
-//                users = state.likersList.map { AvatarBlock(it.name, it.avatar) }
-//            ) { navigateToUsers(post.likeOwnerIds.toLongArray(), "Likers") }
+
             bindAvatarRow(likedRow, state.likersList.map { AvatarItem(it.name, it.avatar) }) {
                 navigateToUsers(post.likeOwnerIds.toLongArray(), "Likers")
             }
 
             binding.mentionList.isVisible = post.mentionIds.isNotEmpty()
             mentionsCount.text = post.mentionIds.size.toString()
-//            fillAvatarRow(
-//                row = mentionedRow,
-//                users = state.mentioned.map { AvatarBlock(it.name, it.avatar) }
-//            ) {
-//                navigateToUsers(post.mentionIds.toLongArray(), "Mentioned")
-//            }
+
             bindAvatarRow(mentionedRow, state.mentioned.map { AvatarItem(it.name, it.avatar) }) {
                 navigateToUsers(post.mentionIds.toLongArray(), "Mentioned")
             }
