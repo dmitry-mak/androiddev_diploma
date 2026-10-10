@@ -75,11 +75,6 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
             }
 
             override fun onOpen(event: EventDto) {
-//                Toast.makeText(
-//                    requireContext(),
-//                    "Детали события № ${event.id} - шаг 4.3",
-//                    Toast.LENGTH_LONG
-//                ).show()
                 val bundle = Bundle().apply {
                     putLong("eventId", event.id)
                 }
@@ -89,11 +84,6 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
             }
 
             override fun onEdit(event: EventDto) {
-//                Toast.makeText(
-//                    requireContext(),
-//                    "Редактрирование события - шаг 4.3",
-//                    Toast.LENGTH_SHORT
-//                ).show()
                 val bundle = Bundle().apply {
                     putLong("eventId", event.id)
                 }
@@ -118,7 +108,6 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
                 startActivity(intent)
             }
         })
-//        binding.eventsList.adapter = adapter
         binding.eventsList.adapter = adapter.withLoadStateFooter(
             LoadStateFooterAdapter {
                 adapter.retry()
@@ -129,12 +118,6 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
     private fun setupObservers() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-//                viewModel.state.collect { state ->
-//                    binding.swipeRefresh.isRefreshing = state.loading
-//                    binding.progress.isVisible = state.loading && state.events.isEmpty()
-//                    binding.empty.isVisible = !state.loading && state.events.isEmpty()
-//                    adapter.submitList(state.events)
-//                }
                 launch {
                     viewModel.pagingEvents.collect { pagingData ->
                         adapter.submitData(pagingData)
@@ -157,13 +140,6 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
                 }
             }
         }
-//        viewLifecycleOwner.lifecycleScope.launch {
-//            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-//                viewModel.error.collect { message ->
-//                    Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
-//                }
-//            }
-//        }
     }
 
     private fun setupEventChangedListener() {
@@ -171,7 +147,6 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
             ?.getLiveData<Boolean>(EVENT_CHANGED_KEY)
             ?.observe(viewLifecycleOwner) { changed ->
                 if (changed == true) {
-//                    viewModel.loadEvents()
                     adapter.refresh()
                     findNavController().currentBackStackEntry?.savedStateHandle
                         ?.set(EVENT_CHANGED_KEY, false)
@@ -182,8 +157,6 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
     private fun setupFab() {
         binding.fab.setOnClickListener {
             if (viewModel.isAuthorized()) {
-//                Toast.makeText(requireContext(), "Создание события- шаг 4.2", Toast.LENGTH_SHORT)
-//                    .show()
                 findNavController().navigate(R.id.action_eventsFragment_to_createEventFragment)
             } else {
                 showAuthDialog()
@@ -193,8 +166,6 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
 
     private fun setupSwipeRefresh() {
         binding.swipeRefresh.setOnRefreshListener {
-//            viewModel.loadEvents()
-//            adapter.retry()
         adapter.refresh()
         }
     }

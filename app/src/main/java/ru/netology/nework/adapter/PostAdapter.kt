@@ -7,7 +7,6 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import ru.netology.nework.R
@@ -29,7 +28,6 @@ interface OnPostInteractionListener {
 
 class PostAdapter(
     private val onInteractionListener: OnPostInteractionListener
-//) : ListAdapter<PostDto, PostViewHolder>(PostDiffCallback()) {
 ) : PagingDataAdapter<PostDto, PostViewHolder>(PostDiffCallback()) {
 
 
@@ -40,20 +38,8 @@ class PostAdapter(
         PostCardBinding.inflate(LayoutInflater.from(parent.context), parent, false),
         onInteractionListener
     )
-//{
-//        val binding = PostCardBinding.inflate(
-//            LayoutInflater.from(parent.context),
-//            parent,
-//            false
-//        )
-//        return PostViewHolder(
-//            binding, onInteractionListener
-//        )
-//    }
-
 
     override fun onBindViewHolder(holder: PostViewHolder, possition: Int) {
-//        holder.bind(getItem(possition))
         getItem(possition)?.let { holder.bind(it) }
     }
 }

@@ -9,7 +9,6 @@ import okio.IOException
 import ru.netology.nework.api.ApiService
 import ru.netology.nework.db.EventDao
 import ru.netology.nework.db.EventEntity
-import ru.netology.nework.db.PostDao
 import ru.netology.nework.db.toEntity
 
 

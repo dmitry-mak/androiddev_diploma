@@ -108,5 +108,4 @@ class UsersListFragment : Fragment(R.layout.fragment_users_list) {
         const val SELECT_USERS_REQUEST_KEY = "select_users_request"
         const val SELECTED_IDS_KEY = "selected_ids"
     }
-
 }

@@ -23,18 +23,6 @@ class PostRepository @Inject constructor(
     private val apiService: ApiService,
     private val postDao: PostDao
 ) {
-    suspend fun getPosts(): Result<List<PostDto>> = try {
-        val response = apiService.getPosts()
-        if (response.isSuccessful) {
-            Result.success(response.body().orEmpty())
-        } else {
-            Result.failure(PostException(errorMessage(response.code())))
-        }
-    } catch (e: IOException) {
-        Result.failure(PostException("Ошибка сети"))
-    } catch (e: Exception) {
-        Result.failure(PostException(e.message ?: "Не удалось загрузить посты"))
-    }
 
     @OptIn(ExperimentalPagingApi::class)
     fun pagingPosts(): Flow<PagingData<PostDto>> =

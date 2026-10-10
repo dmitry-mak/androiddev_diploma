@@ -23,19 +23,6 @@ class EventRepository @Inject constructor(
     private val apiService: ApiService,
     private val eventDao: EventDao
 ) {
-    suspend fun getEvents(): Result<List<EventDto>> = try {
-        val response = apiService.getEvents()
-        if (response.isSuccessful) {
-            Result.success(response.body().orEmpty())
-        } else {
-            Result.failure(EventException(errorMessage(response.code())))
-        }
-    } catch (e: IOException) {
-        Result.failure(EventException("Ошибка сети"))
-    } catch (e: Exception) {
-        Result.failure(EventException(e.message ?: "Не удалось загрузить событие"))
-    }
-
     @OptIn(ExperimentalPagingApi::class)
     fun pagingEvents(): Flow<PagingData<EventDto>> =
         Pager(

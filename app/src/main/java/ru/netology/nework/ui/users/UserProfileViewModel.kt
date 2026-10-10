@@ -173,5 +173,4 @@ class UserProfileViewModel @Inject constructor(
             )
         }
     }
-
 }

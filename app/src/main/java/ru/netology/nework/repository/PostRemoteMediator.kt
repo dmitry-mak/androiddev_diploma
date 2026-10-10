@@ -22,7 +22,7 @@ class PostRemoteMediator(
         loadType: LoadType,
         state: PagingState<Int, PostEntity>
     ): MediatorResult {
-        Log.d("MEDIATOR", "load: ${loadType}")
+        Log.d("MEDIATOR", "load: $loadType")
         return try {
             val response = when (loadType) {
                 LoadType.REFRESH -> apiService.getLatestPosts(state.config.pageSize)

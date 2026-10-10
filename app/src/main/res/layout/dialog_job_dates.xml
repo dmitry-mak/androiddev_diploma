@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:text="Enter dates"
         android:textColor="#201A33"
-        android:textSize="24dp"
+        android:textSize="24sp"
         android:textStyle="bold"/>
 
     <com.google.android.material.textfield.TextInputLayout

@@ -50,7 +50,6 @@ class PostsFragment : Fragment(R.layout.fragment_posts) {
 
     private fun setupSwipeRefresh() {
         binding.swipeRefresh.setOnRefreshListener {
-//            viewModel.loadPosts()
             adapter.refresh()
         }
     }
@@ -116,7 +115,6 @@ class PostsFragment : Fragment(R.layout.fragment_posts) {
             }
         })
         binding.postsList.adapter = adapter.withLoadStateFooter(
-//            PostsLoadStateAdapter { adapter.retry()
             LoadStateFooterAdapter {
                 adapter.retry()
             }
@@ -126,12 +124,6 @@ class PostsFragment : Fragment(R.layout.fragment_posts) {
     private fun setupObservers() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-//                viewModel.state.collect { state ->
-//                    binding.swipeRefresh.isRefreshing = state.loading
-//                    binding.progress.isVisible = state.loading && state.posts.isEmpty()
-//                    binding.empty.isVisible = !state.loading && state.posts.isEmpty()
-//                    adapter.submitList(state.posts)
-//                }
                 launch {
                     viewModel.pagingPosts.collect { pagingData ->
                         adapter.submitData(pagingData)
@@ -154,13 +146,6 @@ class PostsFragment : Fragment(R.layout.fragment_posts) {
                 }
             }
         }
-//        viewLifecycleOwner.lifecycleScope.launch {
-//            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-//                viewModel.error.collect { message ->
-//                    Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
-//                }
-//            }
-//        }
     }
 
     private fun setupPostChangedListener() {
@@ -168,7 +153,6 @@ class PostsFragment : Fragment(R.layout.fragment_posts) {
             ?.getLiveData<Boolean>(CreatePostFragment.IS_POST_CHANGED)
             ?.observe(viewLifecycleOwner) { postChanged ->
                 if (postChanged == true) {
-//                    viewModel.loadPosts()
                     adapter.refresh()
                     findNavController().currentBackStackEntry?.savedStateHandle
                         ?.set(CreatePostFragment.IS_POST_CHANGED, false)

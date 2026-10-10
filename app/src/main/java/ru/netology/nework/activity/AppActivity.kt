@@ -41,7 +41,6 @@ class AppActivity : AppCompatActivity() {
         setContentView(binding.root)
         setSupportActionBar(binding.toolbar)
 
-//        setContentView(R.layout.activity_main)
         ViewCompat.setOnApplyWindowInsetsListener(binding.main) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, 0)
@@ -52,10 +51,7 @@ class AppActivity : AppCompatActivity() {
         val navHostFragment =
             supportFragmentManager.findFragmentById(R.id.main_nav_host) as NavHostFragment
 
-//        val navController = findNavController(R.id.main_nav_host)
          navController = navHostFragment.navController
-
-//        binding.bottomNav.setupWithNavController(navController)
 
          appBarConfiguration = AppBarConfiguration(
             setOf(
@@ -68,13 +64,8 @@ class AppActivity : AppCompatActivity() {
         setupActionBarWithNavController(navController, appBarConfiguration)
         binding.bottomNav.setupWithNavController(navController)
 
-//        navController.addOnDestinationChangedListener { _, destination, _ ->
-//            supportActionBar?.title = destination.label
-//        }
-
         addMenuProvider(object : MenuProvider {
             override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
-//                    menu.clear()
                 menuInflater.inflate(R.menu.menu_main, menu)
             }
 

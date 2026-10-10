@@ -6,7 +6,6 @@ import com.google.gson.reflect.TypeToken
 import ru.netology.nework.dto.AttachmentDto
 import ru.netology.nework.dto.CoordinatesDto
 import ru.netology.nework.dto.EventType
-import ru.netology.nework.dto.UserDto
 import ru.netology.nework.dto.UserPreviewDto
 
 class Converters {
