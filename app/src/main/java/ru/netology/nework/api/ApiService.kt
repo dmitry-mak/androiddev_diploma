@@ -109,6 +109,26 @@ interface ApiService {
     @DELETE("api/events/{id}/participants")
     suspend fun leaveEventById(@Path("id") id: Long): Response<EventDto>
 
+    @GET("api/events/latest")
+    suspend fun getLatestEvents(@Query("count") count: Int): Response<List<EventDto>>
+
+    @GET("api/events/{id}/newer")
+    suspend fun getNewerEvents(
+        @Path("id") id: Long
+    ): Response<List<EventDto>>
+
+    @GET("api/events/{id}/before")
+    suspend fun getEventsBeforeId(
+        @Path("id") id: Long,
+        @Query("count") count: Int
+    ): Response<List<EventDto>>
+
+    @GET("api/events/{id}/after")
+    suspend fun getEventsAfterId(
+        @Path("id") id: Long,
+        @Query("count") count: Int
+    ): Response<List<EventDto>>
+
 
     //    API USERS:
     @GET("api/users")

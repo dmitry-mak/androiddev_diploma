@@ -39,8 +39,7 @@ class PostsViewModel @Inject constructor(
             pagingData.map { post ->
                 post.copy(ownedByMe = post.authorId == myId)
             }
-        }
-        .cachedIn(viewModelScope)
+        }.cachedIn(viewModelScope)
 
 
     private val _error = MutableSharedFlow<String>()

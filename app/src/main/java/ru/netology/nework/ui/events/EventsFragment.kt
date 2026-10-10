@@ -14,12 +14,14 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
+import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import ru.netology.nework.R
 import ru.netology.nework.adapter.EventAdapter
+import ru.netology.nework.adapter.LoadStateFooterAdapter
 import ru.netology.nework.adapter.OnEventInteractionListener
 import ru.netology.nework.databinding.FragmentEventsBinding
 import ru.netology.nework.dto.EventDto
@@ -92,9 +94,13 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
 //                    "Редактрирование события - шаг 4.3",
 //                    Toast.LENGTH_SHORT
 //                ).show()
-                val bundle = Bundle().apply { putLong("eventId",event.id)
+                val bundle = Bundle().apply {
+                    putLong("eventId", event.id)
                 }
-                findNavController().navigate(R.id.action_eventsFragment_to_createEventFragment,bundle)
+                findNavController().navigate(
+                    R.id.action_eventsFragment_to_createEventFragment,
+                    bundle
+                )
             }
 
             override fun onRemove(event: EventDto) {
@@ -112,27 +118,52 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
                 startActivity(intent)
             }
         })
-        binding.eventsList.adapter = adapter
+//        binding.eventsList.adapter = adapter
+        binding.eventsList.adapter = adapter.withLoadStateFooter(
+            LoadStateFooterAdapter {
+                adapter.retry()
+            }
+        )
     }
 
     private fun setupObservers() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.state.collect { state ->
-                    binding.swipeRefresh.isRefreshing = state.loading
-                    binding.progress.isVisible = state.loading && state.events.isEmpty()
-                    binding.empty.isVisible = !state.loading && state.events.isEmpty()
-                    adapter.submitList(state.events)
+//                viewModel.state.collect { state ->
+//                    binding.swipeRefresh.isRefreshing = state.loading
+//                    binding.progress.isVisible = state.loading && state.events.isEmpty()
+//                    binding.empty.isVisible = !state.loading && state.events.isEmpty()
+//                    adapter.submitList(state.events)
+//                }
+                launch {
+                    viewModel.pagingEvents.collect { pagingData ->
+                        adapter.submitData(pagingData)
+                    }
+                }
+                launch {
+                    adapter.loadStateFlow.collect { states ->
+                        val refresh = states.refresh
+                        binding.swipeRefresh.isRefreshing = refresh is LoadState.Loading
+                        binding.progress.isVisible =
+                            refresh is LoadState.Loading && adapter.itemCount == 0
+                        binding.empty.isVisible =
+                            refresh is LoadState.NotLoading && adapter.itemCount == 0
+                    }
+                }
+                launch {
+                    viewModel.error.collect { message ->
+                        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+                    }
                 }
             }
         }
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.error.collect { message ->
-                    Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
-                }
-            }
-        }
+//        viewLifecycleOwner.lifecycleScope.launch {
+//            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+//                viewModel.error.collect { message ->
+//                    Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+//                }
+//            }
+//        }
     }
 
     private fun setupEventChangedListener() {
@@ -140,7 +171,8 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
             ?.getLiveData<Boolean>(EVENT_CHANGED_KEY)
             ?.observe(viewLifecycleOwner) { changed ->
                 if (changed == true) {
-                    viewModel.loadEvents()
+//                    viewModel.loadEvents()
+                    adapter.refresh()
                     findNavController().currentBackStackEntry?.savedStateHandle
                         ?.set(EVENT_CHANGED_KEY, false)
                 }
@@ -161,7 +193,9 @@ class EventsFragment : Fragment(R.layout.fragment_events) {
 
     private fun setupSwipeRefresh() {
         binding.swipeRefresh.setOnRefreshListener {
-            viewModel.loadEvents()
+//            viewModel.loadEvents()
+//            adapter.retry()
+        adapter.refresh()
         }
     }
 

@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.appcompat.widget.PopupMenu
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
+import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -30,22 +31,28 @@ interface OnEventInteractionListener {
 }
 
 class EventAdapter(private val onInteractionListener: OnEventInteractionListener) :
-    ListAdapter<EventDto, EventViewHolder>(EventDiffCallback()) {
+//    ListAdapter<EventDto, EventViewHolder>(EventDiffCallback())
+    PagingDataAdapter<EventDto, EventViewHolder>(EventDiffCallback()) {
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
-    ): EventViewHolder {
-        val binding = EventCardBinding.inflate(
-            LayoutInflater.from(parent.context),
-            parent,
-            false
+    ): EventViewHolder =
+        EventViewHolder(
+            EventCardBinding.inflate(LayoutInflater.from(parent.context), parent, false),
+            onInteractionListener
         )
-        return EventViewHolder(binding, onInteractionListener)
-    }
+//    {
+//        val binding = EventCardBinding.inflate(
+//            LayoutInflater.from(parent.context),
+//            parent,
+//            false
+//        )
+//        return EventViewHolder(binding, onInteractionListener)
+//    }
 
     override fun onBindViewHolder(holder: EventViewHolder, position: Int) {
-        holder.bind(getItem(position))
-
+//        holder.bind(getItem(position))
+        getItem(position)?.let { holder.bind(it) }
     }
 }
 

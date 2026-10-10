@@ -1,6 +1,16 @@
 package ru.netology.nework.repository
 
+import androidx.paging.ExperimentalPagingApi
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
+import androidx.paging.map
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import ru.netology.nework.api.ApiService
+import ru.netology.nework.db.EventDao
+import ru.netology.nework.db.toDto
+import ru.netology.nework.db.toEntity
 import ru.netology.nework.dto.CreateEventRequest
 import ru.netology.nework.dto.EventDto
 import java.io.IOException
@@ -10,7 +20,8 @@ import javax.inject.Singleton
 
 @Singleton
 class EventRepository @Inject constructor(
-    private val apiService: ApiService
+    private val apiService: ApiService,
+    private val eventDao: EventDao
 ) {
     suspend fun getEvents(): Result<List<EventDto>> = try {
         val response = apiService.getEvents()
@@ -24,6 +35,19 @@ class EventRepository @Inject constructor(
     } catch (e: Exception) {
         Result.failure(EventException(e.message ?: "Не удалось загрузить событие"))
     }
+
+    @OptIn(ExperimentalPagingApi::class)
+    fun pagingEvents(): Flow<PagingData<EventDto>> =
+        Pager(
+            config = PagingConfig(
+                pageSize = 12,
+                prefetchDistance = 4,
+                enablePlaceholders = false
+            ), remoteMediator = EventRemoteMediator(apiService, eventDao),
+            pagingSourceFactory = { eventDao.pagingSource() }
+        ).flow.map { pagingData ->
+            pagingData.map { entity -> entity.toDto() }
+        }
 
     suspend fun getEventById(id: Long): Result<EventDto> = try {
         val response = apiService.getEventById(id)
@@ -54,6 +78,10 @@ class EventRepository @Inject constructor(
     } catch (e: Exception) {
         Result.failure(EventException(e.message ?: "Не удалось сохранить событие"))
     }
+
+    suspend fun updateDb(event: EventDto)=eventDao.upsert(event.toEntity())
+
+    suspend fun deleteFromDb(id: Long)= eventDao.deleteById(id)
 
     suspend fun deleteEvent(id: Long): Result<Unit> = try {
         val response = apiService.deleteEventById(id)

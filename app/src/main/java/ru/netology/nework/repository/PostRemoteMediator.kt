@@ -26,7 +26,6 @@ class PostRemoteMediator(
         return try {
             val response = when (loadType) {
                 LoadType.REFRESH -> apiService.getLatestPosts(state.config.pageSize)
-
                 LoadType.PREPEND -> {
                     val firstId = state.firstItemOrNull()?.id
                         ?: return MediatorResult.Success(endOfPaginationReached = true)

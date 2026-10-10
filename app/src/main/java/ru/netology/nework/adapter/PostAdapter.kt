@@ -76,7 +76,13 @@ class PostViewHolder(
             avatarInit.isVisible = false
             avatarImage.isVisible = true
             Glide.with(avatarImage)
-                .load(avatarUrl)
+//                .load(avatarUrl)
+                .load(
+                    UrlUtils.resizeTransform(
+                        UrlUtils.avatarUrl(post.authorAvatar),
+                        "w-108,h-108"
+                    )
+                )
                 .circleCrop()
                 .placeholder(R.drawable.bg_avatar_circle)
                 .into(avatarImage)
@@ -92,7 +98,8 @@ class PostViewHolder(
                 attachmentContainer.isVisible = true
                 playIcon.isVisible = false
                 Glide.with(attachmentImage)
-                    .load(UrlUtils.mediaUrl(post.attachment.url))
+                    .load(UrlUtils.resizeTransform(UrlUtils.mediaUrl(post.attachment.url), "w-640,q-70"))
+//                    .load(UrlUtils.mediaUrl(post.attachment.url))
                     .centerCrop()
                     .into(attachmentImage)
                 attachmentImage.setOnClickListener {

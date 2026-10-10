@@ -19,6 +19,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import ru.netology.nework.R
+import ru.netology.nework.adapter.LoadStateFooterAdapter
 import ru.netology.nework.adapter.OnPostInteractionListener
 import ru.netology.nework.adapter.PostAdapter
 import ru.netology.nework.databinding.FragmentPostsBinding
@@ -115,7 +116,10 @@ class PostsFragment : Fragment(R.layout.fragment_posts) {
             }
         })
         binding.postsList.adapter = adapter.withLoadStateFooter(
-            PostsLoadStateAdapter { adapter.retry() }
+//            PostsLoadStateAdapter { adapter.retry()
+            LoadStateFooterAdapter {
+                adapter.retry()
+            }
         )
     }
 

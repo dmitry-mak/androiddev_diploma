@@ -2,6 +2,8 @@ package ru.netology.nework.db
 
 import androidx.paging.PagingSource
 import androidx.room.Dao
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Upsert
@@ -11,6 +13,13 @@ interface PostDao {
 
     @Query("SELECT * FROM posts ORDER BY id DESC")
     fun pagingSource(): PagingSource<Int, PostEntity>
+
+//
+//    @Insert(onConflict = OnConflictStrategy.REPLACE)
+//    suspend fun upsertAll(posts: List<PostEntity>)
+//
+//    @Insert(onConflict = OnConflictStrategy.REPLACE)
+//    suspend fun upsert(post: PostEntity)
 
     @Upsert
     suspend fun upsertAll(posts: List<PostEntity>)

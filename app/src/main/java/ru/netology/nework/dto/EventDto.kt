@@ -9,9 +9,7 @@ data class EventDto(
     val content: String,
     val datetime: String,
     val published: String,
-
     val coords: CoordinatesDto? = null,
-
     val type: EventType = EventType.ONLINE,
     val likeOwnerIds: List<Long> = emptyList(),
     val likedByMe: Boolean = false,

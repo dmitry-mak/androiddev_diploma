@@ -17,8 +17,13 @@ object DatabaseModule {
     @Provides
     @Singleton
     fun provideDatabase(@ApplicationContext context: Context): NeWorkDb =
-        Room.databaseBuilder(context, NeWorkDb::class.java, NeWorkDb.NAME).build()
+        Room.databaseBuilder(context, NeWorkDb::class.java, NeWorkDb.NAME)
+            .fallbackToDestructiveMigration()
+            .build()
 
     @Provides
     fun providePostDao(db: NeWorkDb): PostDao = db.postDao()
+
+    @Provides
+    fun provideEventDao(db: NeWorkDb): EventDao = db.eventDao()
 }

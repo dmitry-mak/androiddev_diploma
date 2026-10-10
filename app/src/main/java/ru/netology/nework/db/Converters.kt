@@ -5,6 +5,7 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import ru.netology.nework.dto.AttachmentDto
 import ru.netology.nework.dto.CoordinatesDto
+import ru.netology.nework.dto.EventType
 import ru.netology.nework.dto.UserDto
 import ru.netology.nework.dto.UserPreviewDto
 
@@ -39,5 +40,15 @@ class Converters {
     @TypeConverter
     fun toUsers(value: String?): Map<String, UserPreviewDto>? =
         value?.let { gson.fromJson(it, object : TypeToken<Map<String, UserPreviewDto>>() {}.type) }
+
+    @TypeConverter
+    fun fromEventType(value: EventType?): String? = value?.name
+
+    @TypeConverter
+    fun toEventType(value: String?): EventType? = value?.let {
+        runCatching {
+            EventType.valueOf(it)
+        }.getOrNull()
+    }
 
 }
