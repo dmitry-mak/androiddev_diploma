@@ -2,8 +2,6 @@ package ru.netology.nework.ui.events
 
 import android.net.Uri
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
@@ -14,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.FileProvider
 import androidx.core.view.MenuProvider
 import androidx.core.view.isVisible
+import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -27,6 +26,7 @@ import ru.netology.nework.R
 import ru.netology.nework.databinding.FragmentCreateEventBinding
 import ru.netology.nework.dto.CoordinatesDto
 import ru.netology.nework.dto.EventType
+import ru.netology.nework.error.toUserMessage
 import ru.netology.nework.ui.maps.MapPickerFragment
 import ru.netology.nework.ui.users.UsersListFragment
 import ru.netology.nework.util.DateUtils
@@ -63,7 +63,8 @@ class CreateEventFragment : Fragment(R.layout.fragment_create_event) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentCreateEventBinding.bind(view)
 
-        val eventId = arguments?.getLong("eventId", 0L) ?: 0L
+//        val eventId = arguments?.getLong("eventId", 0L) ?: 0L
+        val eventId = arguments?.getLong(ARG_EVENT_ID, 0L) ?: 0L
         val title = if (eventId != 0L) "Edit event" else "New event"
         (requireActivity() as AppCompatActivity).supportActionBar?.title = title
 
@@ -121,9 +122,12 @@ class CreateEventFragment : Fragment(R.layout.fragment_create_event) {
 
             btnSpeakers.setOnClickListener {
                 val bundle = Bundle().apply {
-                    putString("title", "Speakers")
-                    putString("mode", "select")
-                    putLongArray("userIds", viewModel.state.value.speakerIds.toLongArray())
+//                    putString("title", "Speakers")
+//                    putString("mode", "select")
+//                    putLongArray("userIds", viewModel.state.value.speakerIds.toLongArray())
+                    putString(UsersListFragment.ARG_TITLE, "Speakers")
+                    putString(UsersListFragment.ARG_MODE, "select")
+                    putLongArray(UsersListFragment.ARG_USER_IDS, viewModel.state.value.speakerIds.toLongArray())
                 }
                 findNavController().navigate(
                     R.id.action_createEventFragment_to_usersListFragment,
@@ -140,25 +144,9 @@ class CreateEventFragment : Fragment(R.layout.fragment_create_event) {
         }
 
     private fun setupTextWatchers() {
-        binding.newEventContent.addTextChangedListener(object : TextWatcher {
-            override fun afterTextChanged(string: Editable?) {
-                viewModel.updateContent(string?.toString().orEmpty())
-            }
-
-            override fun beforeTextChanged(
-                string: CharSequence?,
-                start: Int,
-                count: Int,
-                after: Int
-            ) = Unit
-
-            override fun onTextChanged(
-                string: CharSequence?,
-                start: Int,
-                before: Int,
-                count: Int
-            ) = Unit
-        })
+        binding.newEventContent.doAfterTextChanged { text ->
+            viewModel.updateContent(text?.toString().orEmpty())
+        }
     }
 
     private fun setupResultListeners() {
@@ -226,8 +214,8 @@ class CreateEventFragment : Fragment(R.layout.fragment_create_event) {
                     }
                 }
                 launch {
-                    viewModel.error.collect { message ->
-                        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+                    viewModel.error.collect { error ->
+                        Toast.makeText(requireContext(), error.toUserMessage(), Toast.LENGTH_SHORT).show()
                     }
                 }
                 launch {
@@ -269,9 +257,12 @@ class CreateEventFragment : Fragment(R.layout.fragment_create_event) {
     private fun openCoordsPicker() {
         val coords = viewModel.state.value.coords
         val bundle = Bundle().apply {
-            putBoolean("hasCoords", coords != null)
-            putDouble("arg_lat", coords?.lat ?: 0.0)
-            putDouble("arg_lng", coords?.lng ?: 0.0)
+//            putBoolean("hasCoords", coords != null)
+//            putDouble("arg_lat", coords?.lat ?: 0.0)
+//            putDouble("arg_lng", coords?.lng ?: 0.0)
+            putBoolean(MapPickerFragment.ARG_HAS_COORDS, coords != null)
+            putDouble(MapPickerFragment.ARG_LAT, coords?.lat ?: 0.0)
+            putDouble(MapPickerFragment.ARG_LONG, coords?.lng ?: 0.0)
         }
         findNavController().navigate(R.id.action_createEventFragment_to_mapPickerFragment, bundle)
     }
@@ -279,5 +270,9 @@ class CreateEventFragment : Fragment(R.layout.fragment_create_event) {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    companion object{
+        const val ARG_EVENT_ID = "eventId"
     }
 }

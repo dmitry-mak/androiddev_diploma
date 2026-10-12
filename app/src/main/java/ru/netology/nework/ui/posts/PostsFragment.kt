@@ -5,7 +5,6 @@ import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -15,7 +14,6 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import ru.netology.nework.R
@@ -24,7 +22,9 @@ import ru.netology.nework.adapter.OnPostInteractionListener
 import ru.netology.nework.adapter.PostAdapter
 import ru.netology.nework.databinding.FragmentPostsBinding
 import ru.netology.nework.dto.PostDto
+import ru.netology.nework.error.toUserMessage
 import ru.netology.nework.util.UrlUtils
+import ru.netology.nework.util.showAuthDialog
 
 @AndroidEntryPoint
 class PostsFragment : Fragment(R.layout.fragment_posts) {
@@ -33,7 +33,6 @@ class PostsFragment : Fragment(R.layout.fragment_posts) {
     private var _binding: FragmentPostsBinding? = null
     private val binding get() = _binding!!
     private lateinit var adapter: PostAdapter
-    private var authDialog: AlertDialog? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
@@ -140,8 +139,8 @@ class PostsFragment : Fragment(R.layout.fragment_posts) {
                     }
                 }
                 launch {
-                    viewModel.error.collect { message ->
-                        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+                    viewModel.error.collect { error ->
+                        Toast.makeText(requireContext(), error.toUserMessage(), Toast.LENGTH_SHORT).show()
                     }
                 }
             }
@@ -170,26 +169,8 @@ class PostsFragment : Fragment(R.layout.fragment_posts) {
         }
     }
 
-
-    private fun showAuthDialog() {
-        if (authDialog?.isShowing == true) return
-        authDialog = MaterialAlertDialogBuilder(requireContext())
-            .setTitle("Необходимо авторизоваться")
-            .setMessage("Войдите или зарегистрируйтесь чтобы продолжить")
-            .setPositiveButton("Вход") { _, _ ->
-                findNavController().navigate(R.id.action_global_loginFragment)
-            }
-            .setNegativeButton("Регистрация") { _, _ ->
-                findNavController().navigate(R.id.action_global_registerFragment)
-            }
-            .setNeutralButton("Отмена", null)
-            .show()
-    }
-
     override fun onDestroyView() {
         super.onDestroyView()
-        authDialog?.dismiss()
-        authDialog = null
         _binding = null
     }
 }

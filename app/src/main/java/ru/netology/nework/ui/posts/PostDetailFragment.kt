@@ -9,6 +9,7 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.core.view.MenuProvider
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -23,10 +24,13 @@ import kotlinx.coroutines.launch
 import ru.netology.nework.R
 import ru.netology.nework.databinding.AvatarRowBinding
 import ru.netology.nework.databinding.FragmentPostDetailBinding
+import ru.netology.nework.dto.AttachmentType
 import ru.netology.nework.dto.PostDto
+import ru.netology.nework.error.toUserMessage
 import ru.netology.nework.ui.common.AvatarItem
 import ru.netology.nework.ui.common.bindAvatarRow
 import ru.netology.nework.ui.maps.showDetailMap
+import ru.netology.nework.ui.users.UsersListFragment
 import ru.netology.nework.util.DateUtils
 import ru.netology.nework.util.UrlUtils
 import kotlin.getValue
@@ -87,6 +91,11 @@ class PostDetailFragment : Fragment(R.layout.fragment_post_detail) {
                 launch {
                     viewmodel.state.collect { render(it) }
                 }
+                launch {
+                    viewmodel.error.collect { error ->
+                        Toast.makeText(requireContext(),error.toUserMessage(), Toast.LENGTH_SHORT).show()
+                    }
+                }
             }
         }
     }
@@ -112,7 +121,7 @@ class PostDetailFragment : Fragment(R.layout.fragment_post_detail) {
             authorJob.text = post.authorJob.orEmpty()
 
             when (post.attachment?.type) {
-                "IMAGE" -> {
+                AttachmentType.IMAGE -> {
                     attachmentContainer.isVisible = true
                     playIcon.isVisible = false
                     Glide.with(attachmentImage)
@@ -121,7 +130,7 @@ class PostDetailFragment : Fragment(R.layout.fragment_post_detail) {
                         .into(attachmentImage)
                 }
 
-                "VIDEO", "AUDIO" -> {
+                AttachmentType.VIDEO, AttachmentType.AUDIO -> {
                     attachmentContainer.isVisible = true
                     playIcon.isVisible = true
                     attachmentContainer.setOnClickListener {
@@ -205,8 +214,10 @@ class PostDetailFragment : Fragment(R.layout.fragment_post_detail) {
 
     private fun navigateToUsers(userIds: LongArray, title: String) {
         val bundle = Bundle().apply {
-            putLongArray("userIds", userIds)
-            putString("title", title)
+//            putLongArray("userIds", userIds)
+//            putString("title", title)
+            putLongArray(UsersListFragment.ARG_USER_IDS, userIds)
+            putString(UsersListFragment.ARG_TITLE, title)
         }
         findNavController().navigate(R.id.action_postDetailFragment_to_usersListFragment, bundle)
     }
@@ -215,5 +226,9 @@ class PostDetailFragment : Fragment(R.layout.fragment_post_detail) {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    companion object{
+        const val ARG_POST_ID = "postId"
     }
 }

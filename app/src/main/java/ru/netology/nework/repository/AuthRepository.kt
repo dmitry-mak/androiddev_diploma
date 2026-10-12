@@ -8,6 +8,8 @@ import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import ru.netology.nework.api.ApiService
 import ru.netology.nework.auth.AppAuth
+import ru.netology.nework.error.AppError
+import ru.netology.nework.error.AppException
 import java.io.IOException
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -24,16 +26,16 @@ class AuthRepository @Inject constructor(
         val response = apiService.login(login, password)
         if (response.isSuccessful) {
             val responseBody =
-                response.body() ?: return Result.failure(AuthException("Empty response body"))
+                response.body() ?: return Result.failure(AppException(AppError.Unknown))
             appAuth.setAuth(responseBody.id, responseBody.token, responseBody.avatar)
             Result.success(Unit)
         } else {
-            Result.failure(AuthException(loginErrorMessage(response.code())))
+            Result.failure(AppException(loginErrorMessage(response.code())))
         }
     } catch (e: IOException) {
-        Result.failure(AuthException("Ошибка сети"))
+        Result.failure(AppException(AppError.Network))
     } catch (e: Exception) {
-        Result.failure(AuthException(e.message ?: "Неизвестная ошибка"))
+        Result.failure(AppException(AppError.Unknown))
     }
 
     suspend fun register(
@@ -50,29 +52,28 @@ class AuthRepository @Inject constructor(
         )
         if (response.isSuccessful) {
             val responseBody = response.body()
-                ?: return Result.failure(AuthException("Пустой ответ от сервера"))
+                ?: return Result.failure(AppException(AppError.Unknown))
             appAuth.setAuth(responseBody.id, responseBody.token, responseBody.avatar)
             Result.success(Unit)
         } else {
-            Result.failure(AuthException(registerErrorMessage(response.code())))
+            Result.failure(AppException(registerErrorMessage(response.code())))
         }
     } catch (e: IOException) {
-        Result.failure(AuthException("Ошибка сети"))
+        Result.failure(AppException(AppError.Network))
     } catch (e: Exception) {
-        Result.failure(AuthException(e.message ?: "Неизвестная ошибка"))
+        Result.failure(AppException(AppError.Unknown))
     }
 
 
-    private fun loginErrorMessage(code: Int): String = when (code) {
-        400 -> "Неверный логин или пароль"
-        404 -> "Неверный логин или пароль"
-        else -> "Ошибка сервера: $code"
+    private fun loginErrorMessage(code: Int) = when (code) {
+        400,404 -> AppError.InvalidCredentials
+        else -> AppError.Server(code)
     }
 
-    private fun registerErrorMessage(code: Int): String = when (code) {
-        400, 403 -> "Пользователь с таким логином уже существует"
-        415 -> "Невалидный формат фото"
-        else -> "Ошибка сервера: $code"
+    private fun registerErrorMessage(code: Int)= when (code) {
+        400, 403 -> AppError.UserAlreadyExists
+        415 -> AppError.InvalidImageFormat
+        else -> AppError.Server(code)
     }
 
     private fun String.toTextBody() =
@@ -93,5 +94,3 @@ class AuthRepository @Inject constructor(
         )
     }
 }
-
-class AuthException(message: String) : Exception(message)

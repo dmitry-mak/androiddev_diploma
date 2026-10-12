@@ -85,9 +85,9 @@ class MapPickerFragment : Fragment(R.layout.fragment_map_coords_picker) {
         const val REQUEST_KEY = "map_picker_request"
         const val KEY_LAT = "lat"
         const val KEY_LONG = "lng"
-        private const val ARG_HAS_COORDS = "has_coords"
-        private const val ARG_LAT = "arg_lat"
-        private const val ARG_LONG = "arg_lng"
+        const val ARG_HAS_COORDS = "has_coords"
+        const val ARG_LAT = "arg_lat"
+        const val ARG_LONG = "arg_lng"
         private val DEFAULT_CENTER = LatLng(55.7558, 37.6173)
     }
 }

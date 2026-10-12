@@ -5,7 +5,6 @@ import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -26,7 +25,9 @@ import ru.netology.nework.adapter.OnPostInteractionListener
 import ru.netology.nework.adapter.WallPostAdapter
 import ru.netology.nework.databinding.FragmentUserProfileBinding
 import ru.netology.nework.dto.PostDto
+import ru.netology.nework.error.toUserMessage
 import ru.netology.nework.util.UrlUtils
+import ru.netology.nework.util.showAuthDialog
 import kotlin.getValue
 
 
@@ -40,8 +41,6 @@ class UserProfileFragment : Fragment(R.layout.fragment_user_profile) {
 
     private lateinit var postAdapter: WallPostAdapter
     private lateinit var jobAdapter: JobAdapter
-
-    private var authDialog: AlertDialog? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -94,14 +93,16 @@ class UserProfileFragment : Fragment(R.layout.fragment_user_profile) {
             }
 
             override fun onOpen(post: PostDto) {
-                val bundle = Bundle().apply { putLong("postId", post.id) }
+//                val bundle = Bundle().apply { putLong("postId", post.id) }
+                val bundle = Bundle().apply { putLong(ARG_POST_ID, post.id) }
                 findNavController().navigate(
                     R.id.action_userProfileFragment_to_postDetailFragment, bundle
                 )
             }
 
             override fun onEdit(post: PostDto) {
-                val bundle = Bundle().apply { putLong("postId", post.id) }
+//                val bundle = Bundle().apply { putLong("postId", post.id) }
+                val bundle = Bundle().apply { putLong(ARG_POST_ID, post.id) }
                 findNavController().navigate(
                     R.id.action_userProfileFragment_to_createPostFragment, bundle
                 )
@@ -170,8 +171,9 @@ class UserProfileFragment : Fragment(R.layout.fragment_user_profile) {
                     }
                 }
                 launch {
-                    viewModel.error.collect { message ->
-                        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+                    viewModel.error.collect { error ->
+                        Toast.makeText(requireContext(), error.toUserMessage(), Toast.LENGTH_SHORT)
+                            .show()
                     }
                 }
             }
@@ -192,8 +194,8 @@ class UserProfileFragment : Fragment(R.layout.fragment_user_profile) {
             }
         findNavController().currentBackStackEntry?.savedStateHandle
             ?.getLiveData<Boolean>(JOB_CHANGED_KEY)
-            ?.observe(viewLifecycleOwner){ changed ->
-                if (changed == true){
+            ?.observe(viewLifecycleOwner) { changed ->
+                if (changed == true) {
                     viewModel.reloadJobs()
                     findNavController().currentBackStackEntry?.savedStateHandle
                         ?.set(JOB_CHANGED_KEY, false)
@@ -207,21 +209,6 @@ class UserProfileFragment : Fragment(R.layout.fragment_user_profile) {
         }
     }
 
-    private fun showAuthDialog() {
-        if (authDialog?.isShowing == true) return
-        authDialog = MaterialAlertDialogBuilder(requireContext())
-            .setTitle("Необходимо авторизоваться")
-            .setMessage("Войдите или зарегистрируйтесь чтобы продолжить")
-            .setPositiveButton("Вход") { _, _ ->
-                findNavController().navigate(R.id.action_global_loginFragment)
-            }
-            .setNegativeButton("Регистрация") { _, _ ->
-                findNavController().navigate(R.id.action_global_registerFragment)
-            }
-            .setNeutralButton("Отмена", null)
-            .show()
-    }
-
     private fun updateFabVisibility(isJobsTab: Boolean) {
         binding.fabAddJob.isVisible = viewModel.isMyProfile && isJobsTab
     }
@@ -229,5 +216,8 @@ class UserProfileFragment : Fragment(R.layout.fragment_user_profile) {
     companion object {
         const val POST_CHANGED_KEY = "postChanged"
         const val JOB_CHANGED_KEY = "jobChanged"
+
+        const val ARG_USER_ID = "userId"
+        const val ARG_POST_ID = "postId"
     }
 }

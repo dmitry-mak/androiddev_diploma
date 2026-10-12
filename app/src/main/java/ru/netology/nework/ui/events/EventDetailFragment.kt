@@ -26,11 +26,14 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import ru.netology.nework.R
 import ru.netology.nework.databinding.FragmentEventDetailBinding
+import ru.netology.nework.dto.AttachmentType
 import ru.netology.nework.dto.EventDto
 import ru.netology.nework.dto.EventType
+import ru.netology.nework.error.toUserMessage
 import ru.netology.nework.ui.common.AvatarItem
 import ru.netology.nework.ui.common.bindAvatarRow
 import ru.netology.nework.ui.maps.showDetailMap
+import ru.netology.nework.ui.users.UsersListFragment
 import ru.netology.nework.util.DateUtils
 import ru.netology.nework.util.UrlUtils
 
@@ -75,8 +78,9 @@ class EventDetailFragment : Fragment(R.layout.fragment_event_detail) {
                     viewModel.state.collect { render(it) }
                 }
                 launch {
-                    viewModel.error.collect { message ->
-                        Toast.makeText(requireContext(),message, Toast.LENGTH_LONG).show()
+                    viewModel.error.collect { error ->
+                        Toast.makeText(requireContext(), error.toUserMessage(), Toast.LENGTH_LONG)
+                            .show()
                     }
                 }
             }
@@ -104,7 +108,7 @@ class EventDetailFragment : Fragment(R.layout.fragment_event_detail) {
             authorJob.text = event.authorJob.orEmpty()
 
             when (event.attachment?.type) {
-                "IMAGE" -> {
+                AttachmentType.IMAGE -> {
                     attachmentContainer.isVisible = true
                     playIcon.isVisible = false
                     Glide.with(attachmentImage)
@@ -114,7 +118,7 @@ class EventDetailFragment : Fragment(R.layout.fragment_event_detail) {
                     attachmentContainer.setOnClickListener(null)
                 }
 
-                "VIDEO", "AUDIO" -> {
+                AttachmentType.VIDEO, AttachmentType.AUDIO -> {
                     attachmentContainer.isVisible = true
                     playIcon.isVisible = true
                     attachmentImage.setImageResource(0)
@@ -178,14 +182,16 @@ class EventDetailFragment : Fragment(R.layout.fragment_event_detail) {
                 navigateToUsers(event.participantsIds.toLongArray(), "Participants")
             }
 //            mapPlaceholder.isVisible = event.coords != null
-        showDetailMap(mapContainer,event.coords)
+            showDetailMap(mapContainer, event.coords)
         }
     }
 
     private fun navigateToUsers(userIds: LongArray, title: String) {
         val bundle = Bundle().apply {
-            putLongArray("userIds", userIds)
-            putString("title", title)
+//            putLongArray("userIds", userIds)
+//            putString("title", title)
+            putLongArray(UsersListFragment.ARG_USER_IDS, userIds)
+            putString(UsersListFragment.ARG_TITLE, title)
         }
         findNavController().navigate(R.id.action_eventDetailFragment_to_usersListFragment, bundle)
     }
@@ -225,5 +231,9 @@ class EventDetailFragment : Fragment(R.layout.fragment_event_detail) {
         authDialog?.dismiss()
         authDialog = null
         _binding = null
+    }
+
+    companion object {
+        const val ARG_EVENT_ID = "eventId"
     }
 }

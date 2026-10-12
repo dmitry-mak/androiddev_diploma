@@ -14,6 +14,8 @@ import kotlinx.coroutines.launch
 import ru.netology.nework.dto.AttachmentDto
 import ru.netology.nework.dto.CoordinatesDto
 import ru.netology.nework.dto.CreatePostRequest
+import ru.netology.nework.error.AppError
+import ru.netology.nework.error.toAppError
 import ru.netology.nework.repository.MediaRepository
 import ru.netology.nework.repository.PostRepository
 import java.io.File
@@ -42,7 +44,7 @@ class CreatePostViewModel @Inject constructor(
     private val _state = MutableStateFlow(CreatePostUiState())
     val state = _state.asStateFlow()
 
-    private val _error = MutableSharedFlow<String>()
+    private val _error = MutableSharedFlow<AppError>()
     val error = _error.asSharedFlow()
 
     private val _postSaved = MutableSharedFlow<Unit>()
@@ -68,8 +70,8 @@ class CreatePostViewModel @Inject constructor(
                         )
                     }
                 }
-                .onFailure { e ->
-                    _error.emit(e.message ?: "Не удалось загрузить пост")
+                .onFailure { error ->
+                    _error.emit(error.toAppError())
                 }
         }
     }
@@ -92,7 +94,7 @@ class CreatePostViewModel @Inject constructor(
         val type = mediaRepository.mediaTypeOf(file)
         if (type == null) {
             viewModelScope.launch {
-                _error.emit("Такой тип файла не поддерживается")
+                _error.emit(AppError.UnsupportedAttachmentTYpe)
             }
             return
         }
@@ -105,14 +107,14 @@ class CreatePostViewModel @Inject constructor(
                             uploading = false,
                             attachment = AttachmentDto(
                                 url = media.url,
-                                type = type.name
+                                type = type
                             )
                         )
                     }
                 }
-                .onFailure { e ->
+                .onFailure { error ->
                     _state.update { it.copy(uploading = false) }
-                    _error.emit(e.message ?: "Ошибка загрузки")
+                    _error.emit(error.toAppError())
                 }
         }
     }
@@ -125,7 +127,7 @@ class CreatePostViewModel @Inject constructor(
         val current = _state.value
         if (current.content.isBlank()) {
             viewModelScope.launch {
-                _error.emit("Содержимое поста не может быть пустым")
+                _error.emit(AppError.EmptyPostContent)
             }
             return
         }
@@ -147,9 +149,9 @@ class CreatePostViewModel @Inject constructor(
                     _state.update { it.copy(saving = false) }
                     _postSaved.emit(Unit)
                 }
-                .onFailure { e ->
+                .onFailure { error ->
                     _state.update { it.copy(saving = false) }
-                    _error.emit(e.message ?: "Не удалось сохранить пост")
+                    _error.emit(error.toAppError())
                 }
         }
     }

@@ -5,18 +5,18 @@
     <group android:id="@+id/group_authenticated_not">
         <item
             android:id="@+id/menu_login"
-            android:title="Вход"
+            android:title="@string/enter"
             app:showAsAction="never" />
         <item
             android:id="@+id/menu_register"
-            android:title="Регистрация"
+            android:title="@string/registration_ru"
             app:showAsAction="never" />
     </group>
 
     <group android:id="@+id/group_authenticated">
         <item
             android:id="@+id/menu_logout"
-            android:title="Выход"
+            android:title="@string/exit"
             app:showAsAction="never" />
     </group>
 </menu>

@@ -5,6 +5,6 @@
     <item
         android:id="@+id/menu_save_post"
         android:icon="@drawable/ic_check"
-        android:title="Сохранить"
+        android:title="@string/save_ru"
         app:showAsAction="always" />
 </menu>

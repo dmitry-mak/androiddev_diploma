@@ -78,7 +78,7 @@
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:background="?attr/selectableItemBackgroundBorderless"
-            android:contentDescription="Delete"
+            android:contentDescription="@string/delete"
             android:padding="8dp"
             android:src="@drawable/ic_delete_24"
             android:visibility="gone"

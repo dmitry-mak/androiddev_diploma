@@ -9,6 +9,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import ru.netology.nework.error.AppError
+import ru.netology.nework.error.toAppError
 import ru.netology.nework.repository.AuthRepository
 import javax.inject.Inject
 
@@ -23,15 +25,15 @@ class AuthViewModel @Inject constructor(
     private val _loading = MutableStateFlow(false)
     val loading = _loading.asStateFlow()
 
-    private val _error = MutableSharedFlow<String>()
+    private val _error = MutableSharedFlow<AppError>()
     val error = _error.asSharedFlow()
 
     fun login(login: String, password: String) {
         viewModelScope.launch {
             _loading.value = true
             repository.login(login, password)
-                .onFailure {
-                    _error.emit(it.message ?: "Ошибка")
+                .onFailure { e ->
+                    _error.emit(e.toAppError())
                 }
             _loading.value = false
         }
@@ -41,8 +43,8 @@ class AuthViewModel @Inject constructor(
         viewModelScope.launch {
             _loading.value = true
             repository.register(login, password, name, avatarUri)
-                .onFailure {
-                    _error.emit(it.message ?: "Ошибка")
+                .onFailure { e ->
+                    _error.emit(e.toAppError())
                 }
             _loading.value = false
         }

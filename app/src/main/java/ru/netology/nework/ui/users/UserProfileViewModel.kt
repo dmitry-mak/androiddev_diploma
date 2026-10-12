@@ -14,6 +14,8 @@ import ru.netology.nework.auth.AppAuth
 import ru.netology.nework.dto.JobDto
 import ru.netology.nework.dto.PostDto
 import ru.netology.nework.dto.UserDto
+import ru.netology.nework.error.AppError
+import ru.netology.nework.error.toAppError
 import ru.netology.nework.repository.PostRepository
 import ru.netology.nework.repository.UserRepository
 import ru.netology.nework.repository.WallRepository
@@ -42,7 +44,7 @@ class UserProfileViewModel @Inject constructor(
     private val _state = MutableStateFlow(UserProfileUiState())
     val state = _state.asStateFlow()
 
-    private val _error = MutableSharedFlow<String>()
+    private val _error = MutableSharedFlow<AppError>()
     val error = _error.asSharedFlow()
 
     init {
@@ -63,21 +65,21 @@ class UserProfileViewModel @Inject constructor(
                 _state.update { it.copy(user = user) }
             }
                 .onFailure { error ->
-                    _error.emit(error.message ?: "Не удалось загрузить профиль пользователя")
+                    _error.emit(error.toAppError())
                 }
 
             wallResult.onSuccess { wall ->
                 _state.update { it.copy(wall = wall.sortedByDescending { post -> post.id }) }
             }
                 .onFailure { error ->
-                    _error.emit(error.message ?: "Не удалось загрузить стену")
+                    _error.emit(error.toAppError())
                 }
 
             jobsResult.onSuccess { jobs ->
                 _state.update { it.copy(jobs = jobs) }
             }
                 .onFailure { error ->
-                    _error.emit(error.message ?: "Не удалось загрузить список мест работы")
+                    _error.emit(error.toAppError())
                 }
             _state.update { it.copy(loading = false) }
         }
@@ -93,7 +95,7 @@ class UserProfileViewModel @Inject constructor(
                 _state.update { it.copy(wall = wall.sortedByDescending { post -> post.id }) }
             }
                 .onFailure { error ->
-                    _error.emit(error.message ?: "Не удалось обновить стену")
+                    _error.emit(error.toAppError())
                 }
         }
     }
@@ -114,7 +116,7 @@ class UserProfileViewModel @Inject constructor(
                 updateWallPost(server)
             }.onFailure { error ->
                 updateWallPost(post)
-                _error.emit(error.message ?: "Не удалось изменить лайк")
+                _error.emit(error.toAppError())
             }
         }
     }
@@ -130,7 +132,7 @@ class UserProfileViewModel @Inject constructor(
                     }
                 }
                 .onFailure { error ->
-                    _error.emit(error.message ?: "Не удалось удалить пост")
+                    _error.emit(error.toAppError())
                 }
         }
     }
@@ -143,7 +145,7 @@ class UserProfileViewModel @Inject constructor(
                 _state.update { it.copy(jobs = jobs) }
             }
                 .onFailure { error ->
-                    _error.emit(error.message ?: "Не удалось обновить работы")
+                    _error.emit(error.toAppError())
                 }
         }
     }
@@ -159,7 +161,7 @@ class UserProfileViewModel @Inject constructor(
                     }
                 }
                 .onFailure { error ->
-                    _error.emit(error.message ?: "Не удалось удалить работу")
+                    _error.emit(error.toAppError())
                 }
         }
     }

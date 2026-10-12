@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import ru.netology.nework.R
 import ru.netology.nework.databinding.PostCardBinding
+import ru.netology.nework.dto.AttachmentType
 import ru.netology.nework.dto.PostDto
 import ru.netology.nework.util.DateUtils
 import ru.netology.nework.util.UrlUtils
@@ -80,7 +81,7 @@ class PostViewHolder(
         }
 
         when (post.attachment?.type) {
-            "IMAGE" -> {
+            AttachmentType.IMAGE ->  {
                 attachmentContainer.isVisible = true
                 playIcon.isVisible = false
                 Glide.with(attachmentImage)
@@ -93,7 +94,7 @@ class PostViewHolder(
                 }
             }
 
-            "VIDEO", "AUDIO" -> {
+            AttachmentType.VIDEO, AttachmentType.AUDIO -> {
                 attachmentContainer.isVisible = true
                 playIcon.isVisible = true
                 attachmentImage.setImageResource(0)

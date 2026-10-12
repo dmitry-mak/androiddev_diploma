@@ -21,7 +21,7 @@
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Date"
+        android:hint="@string/date"
         app:endIconDrawable="@drawable/ic_calendar_24"
         app:endIconMode="custom"
         app:helperText="dd.MM.yyyy HH:mm">
@@ -39,7 +39,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:text="Type"
+        android:text="@string/type"
         android:textColor="#201A33"
         android:textSize="14sp"
         android:textStyle="bold"/>
@@ -56,11 +56,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:checked="true"
-            android:text="Online"/>
+            android:text="@string/online"/>
         <RadioButton
             android:id="@+id/radio_offline"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Offline"/>
+            android:text="@string/offline"/>
     </RadioGroup>
 </LinearLayout>

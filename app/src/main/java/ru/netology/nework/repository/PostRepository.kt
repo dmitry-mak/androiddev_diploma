@@ -13,6 +13,8 @@ import ru.netology.nework.db.toDto
 import ru.netology.nework.db.toEntity
 import ru.netology.nework.dto.CreatePostRequest
 import ru.netology.nework.dto.PostDto
+import ru.netology.nework.error.AppError
+import ru.netology.nework.error.AppException
 import java.io.IOException
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -42,15 +44,15 @@ class PostRepository @Inject constructor(
     suspend fun getPostById(id: Long): Result<PostDto> = try {
         val response = apiService.getPostById(id)
         if (response.isSuccessful) {
-            val body = response.body() ?: return Result.failure(PostException("Пост не найден"))
+            val body = response.body() ?: return Result.failure(AppException(AppError.NotFound))
             Result.success(body)
         } else {
-            Result.failure(PostException(errorMessage(response.code())))
+            Result.failure(AppException(errorMessage(response.code())))
         }
     } catch (e: IOException) {
-        Result.failure(PostException("Ошибка сети"))
+        Result.failure(AppException(AppError.Network))
     } catch (e: Exception) {
-        Result.failure(PostException(e.message ?: "Не удалось загрузить пост"))
+        Result.failure(AppException(AppError.Unknown))
     }
 
     suspend fun like(post: PostDto): Result<PostDto> = try {
@@ -63,15 +65,15 @@ class PostRepository @Inject constructor(
         if (response.isSuccessful) {
             val body =
                 response.body()
-                    ?: return Result.failure(PostException("Пустой ответ от сервера"))
+                    ?: return Result.failure(AppException(AppError.Unknown))
             Result.success(body)
         } else {
-            Result.failure(PostException(errorMessage(response.code())))
+            Result.failure(AppException(errorMessage(response.code())))
         }
     } catch (e: IOException) {
-        Result.failure(PostException("Ошибка сети"))
+        Result.failure(AppException(AppError.Network))
     } catch (e: Exception) {
-        Result.failure(PostException(e.message ?: "Не удалось изменить лайк"))
+        Result.failure(AppException(AppError.Unknown))
     }
 
     suspend fun createPost(request: CreatePostRequest): Result<PostDto> = try {
@@ -79,15 +81,15 @@ class PostRepository @Inject constructor(
         if (response.isSuccessful) {
             val body =
                 response.body()
-                    ?: return Result.failure(PostException("Пустой ответ от сервера"))
+                    ?: return Result.failure(AppException(AppError.Unknown))
             Result.success(body)
         } else {
-            Result.failure(PostException(errorMessage(response.code())))
+            Result.failure(AppException(errorMessage(response.code())))
         }
     } catch (e: IOException) {
-        Result.failure(PostException("Ошибка сети"))
+        Result.failure(AppException(AppError.Network))
     } catch (e: Exception) {
-        Result.failure(PostException(e.message ?: "Не удалось сохранить пост"))
+        Result.failure(AppException(AppError.Unknown))
     }
 
     // для оптимистичных лайков/анлайков
@@ -100,19 +102,22 @@ class PostRepository @Inject constructor(
         if (response.isSuccessful) {
             Result.success(Unit)
         } else {
-            Result.failure(PostException(errorMessage(response.code())))
+            Result.failure(AppException(errorMessage(response.code())))
         }
     } catch (e: IOException) {
-        Result.failure(PostException("Ошибка сети"))
+        Result.failure(AppException(AppError.Network))
     } catch (e: Exception) {
-        Result.failure(PostException(e.message ?: "Не удалось удалить пост"))
+        Result.failure(AppException(AppError.Unknown))
     }
 
-    private fun errorMessage(code: Int): String = when (code) {
-        401, 403 -> "Необходимо авторизоваться"
-        404 -> "Посты не найдены"
-        else -> "Ошибка сервера: $code"
+    private fun errorMessage(code: Int) = when (code) {
+//        401, 403 -> "Необходимо авторизоваться"
+//        404 -> "Посты не найдены"
+//        else -> "Ошибка сервера: $code"
+        401, 403 -> AppError.Unauthorized
+        404 -> AppError.NotFound
+        else -> AppError.Server(code)
     }
 }
 
-class PostException(message: String) : Exception(message)
+//class PostException(message: String) : Exception(message)

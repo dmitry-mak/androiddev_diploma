@@ -13,6 +13,8 @@ import kotlinx.coroutines.launch
 import ru.netology.nework.auth.AppAuth
 import ru.netology.nework.dto.EventDto
 import ru.netology.nework.dto.UserDto
+import ru.netology.nework.error.AppError
+import ru.netology.nework.error.toAppError
 import ru.netology.nework.repository.EventRepository
 import ru.netology.nework.repository.UserRepository
 import javax.inject.Inject
@@ -40,7 +42,7 @@ class EventDetailViewModel @Inject constructor(
     private val _state = MutableStateFlow(EventDetailUiState())
     val state = _state.asStateFlow()
 
-    private val _error = MutableSharedFlow<String>()
+    private val _error = MutableSharedFlow<AppError>()
     val error = _error.asSharedFlow()
 
     init {
@@ -64,7 +66,7 @@ class EventDetailViewModel @Inject constructor(
                 }
                 .onFailure { error ->
                     _state.update { it.copy(loading = false) }
-                    _error.emit(error.message ?: "Не удалось загрузить событие")
+                    _error.emit(error.toAppError())
                 }
         }
     }
@@ -83,7 +85,7 @@ class EventDetailViewModel @Inject constructor(
                 .onSuccess { server -> applyEvent(server) }
                 .onFailure { error ->
                     applyEvent(current)
-                    _error.emit(error.message ?: "Не удалось обновить статус участия")
+                    _error.emit(error.toAppError())
                 }
         }
     }

@@ -8,7 +8,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Enter dates"
+        android:text="@string/dates_enter"
         android:textColor="#201A33"
         android:textSize="24sp"
         android:textStyle="bold"/>
@@ -18,7 +18,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:hint="Date">
+        android:hint="@string/date">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/date_start_input"
@@ -34,7 +34,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:hint="End Date">
+        android:hint="@string/end_date">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/date_finish_input"
@@ -56,7 +56,7 @@
             android:id="@+id/btn_cancel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Cancel"
+            android:text="@string/cancel"
             android:textColor="@color/white"/>
 
         <com.google.android.material.button.MaterialButton
@@ -64,7 +64,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:text="OK"
+            android:text="@string/ok"
             android:textColor="@color/white"/>
     </LinearLayout>
 </LinearLayout>

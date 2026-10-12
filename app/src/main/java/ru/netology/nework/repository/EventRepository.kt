@@ -13,6 +13,8 @@ import ru.netology.nework.db.toDto
 import ru.netology.nework.db.toEntity
 import ru.netology.nework.dto.CreateEventRequest
 import ru.netology.nework.dto.EventDto
+import ru.netology.nework.error.AppError
+import ru.netology.nework.error.AppException
 import java.io.IOException
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -40,47 +42,47 @@ class EventRepository @Inject constructor(
         val response = apiService.getEventById(id)
         if (response.isSuccessful) {
             val body =
-                response.body() ?: return Result.failure(EventException("Событие не найдено"))
+                response.body() ?: return Result.failure(AppException(AppError.NotFound))
             Result.success(body)
         } else {
-            Result.failure(EventException(errorMessage(response.code())))
+            Result.failure(AppException(errorMessage(response.code())))
         }
     } catch (e: IOException) {
-        Result.failure(EventException("Ошибка сети"))
+        Result.failure(AppException(AppError.Network))
     } catch (e: Exception) {
-        Result.failure(EventException(e.message ?: "Не удалось загрузить событие"))
+        Result.failure(AppException(AppError.Unknown))
     }
 
     suspend fun createEvent(request: CreateEventRequest): Result<EventDto> = try {
         val response = apiService.saveEvent(request)
         if (response.isSuccessful) {
             val body =
-                response.body() ?: return Result.failure(EventException("Пустой ответ от сервера"))
+                response.body() ?: return Result.failure(AppException(AppError.Unknown))
             Result.success(body)
         } else {
-            Result.failure(EventException(errorMessage(response.code())))
+            Result.failure(AppException(errorMessage(response.code())))
         }
     } catch (e: IOException) {
-        Result.failure(EventException("Ошибка сети"))
+        Result.failure(AppException(AppError.Network))
     } catch (e: Exception) {
-        Result.failure(EventException(e.message ?: "Не удалось сохранить событие"))
+        Result.failure(AppException(AppError.Unknown))
     }
 
-    suspend fun updateDb(event: EventDto)=eventDao.upsert(event.toEntity())
+    suspend fun updateDb(event: EventDto) = eventDao.upsert(event.toEntity())
 
-    suspend fun deleteFromDb(id: Long)= eventDao.deleteById(id)
+    suspend fun deleteFromDb(id: Long) = eventDao.deleteById(id)
 
     suspend fun deleteEvent(id: Long): Result<Unit> = try {
         val response = apiService.deleteEventById(id)
         if (response.isSuccessful) {
             Result.success(Unit)
         } else {
-            Result.failure(EventException(errorMessage(response.code())))
+            Result.failure(AppException(errorMessage(response.code())))
         }
     } catch (e: IOException) {
-        Result.failure(EventException("Ошибка сети"))
+        Result.failure(AppException(AppError.Network))
     } catch (e: Exception) {
-        Result.failure(EventException(e.message ?: "Не удалось удалить событие"))
+        Result.failure(AppException(AppError.Unknown))
     }
 
     suspend fun like(event: EventDto): Result<EventDto> = try {
@@ -91,15 +93,15 @@ class EventRepository @Inject constructor(
         }
         if (response.isSuccessful) {
             val body =
-                response.body() ?: return Result.failure(EventException("Пустой ответ от сервера"))
+                response.body() ?: return Result.failure(AppException(AppError.Unknown))
             Result.success(body)
         } else {
-            Result.failure(EventException(errorMessage(response.code())))
+            Result.failure(AppException(errorMessage(response.code())))
         }
     } catch (e: IOException) {
-        Result.failure(EventException("Ошибка сети"))
+        Result.failure(AppException(AppError.Network))
     } catch (e: Exception) {
-        Result.failure(EventException(e.message ?: "Не удалось изменить лайк"))
+        Result.failure(AppException(AppError.Unknown))
     }
 
     suspend fun participate(event: EventDto): Result<EventDto> = try {
@@ -110,22 +112,20 @@ class EventRepository @Inject constructor(
         }
         if (response.isSuccessful) {
             val body =
-                response.body() ?: return Result.failure(EventException("Пустой ответ от сервера"))
+                response.body() ?: return Result.failure(AppException(AppError.Unknown))
             Result.success(body)
         } else {
-            Result.failure(EventException(errorMessage(response.code())))
+            Result.failure(AppException(errorMessage(response.code())))
         }
     } catch (e: IOException) {
-        Result.failure(EventException("Ошибка сети"))
+        Result.failure(AppException(AppError.Network))
     } catch (e: Exception) {
-        Result.failure(EventException(e.message ?: "Не удалось изменить статус участия"))
+        Result.failure(AppException(AppError.Unknown))
     }
 
-    private fun errorMessage(code: Int): String = when (code) {
-        401, 403 -> "Необходимо авторизоваться"
-        404 -> "Событие не найдено"
-        else -> "Ошибка сервера: $code"
+    private fun errorMessage(code: Int) = when (code) {
+        401, 403 -> AppError.Unauthorized
+        404 -> AppError.NotFound
+        else -> AppError.Server(code)
     }
 }
-
-class EventException(message: String) : Exception(message)

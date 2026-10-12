@@ -2,8 +2,6 @@ package ru.netology.nework.ui.posts
 
 import android.net.Uri
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
@@ -13,6 +11,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.FileProvider
 import androidx.core.view.MenuProvider
 import androidx.core.view.isVisible
+import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -25,6 +24,7 @@ import kotlinx.coroutines.launch
 import ru.netology.nework.R
 import ru.netology.nework.databinding.FragmentCreatePostBinding
 import ru.netology.nework.dto.CoordinatesDto
+import ru.netology.nework.error.toUserMessage
 import ru.netology.nework.ui.maps.MapPickerFragment
 import ru.netology.nework.ui.users.UsersListFragment
 import ru.netology.nework.util.UrlUtils
@@ -124,9 +124,15 @@ class CreatePostFragment : Fragment(R.layout.fragment_create_post) {
         }
         btnMention.setOnClickListener {
             val bundle = Bundle().apply {
-                putString("title", "Tag user")
-                putString("mode", "select")
-                putLongArray("userIds", viewModel.state.value.mentionIds.toLongArray())
+//                putString("title", "Tag user")
+//                putString("mode", "select")
+//                putLongArray("userIds", viewModel.state.value.mentionIds.toLongArray())
+                putString(UsersListFragment.ARG_TITLE, "Tag user")
+                putString(UsersListFragment.ARG_MODE, "select")
+                putLongArray(
+                    UsersListFragment.ARG_USER_IDS,
+                    viewModel.state.value.mentionIds.toLongArray()
+                )
             }
             findNavController().navigate(
                 R.id.action_createPostFragment_to_usersListFragment,
@@ -140,25 +146,9 @@ class CreatePostFragment : Fragment(R.layout.fragment_create_post) {
     }
 
     private fun setupTextWatcher() {
-        binding.newPostContent.addTextChangedListener(object : TextWatcher {
-            override fun afterTextChanged(newTextContent: Editable?) {
-                viewModel.updateContent(newTextContent?.toString().orEmpty())
-            }
-
-            override fun beforeTextChanged(
-                s: CharSequence?,
-                start: Int,
-                count: Int,
-                after: Int
-            ) = Unit
-
-            override fun onTextChanged(
-                s: CharSequence?,
-                start: Int,
-                before: Int,
-                count: Int
-            ) = Unit
-        })
+        binding.newPostContent.doAfterTextChanged { newText ->
+            viewModel.updateContent(newText?.toString().orEmpty())
+        }
     }
 
     private fun observeState() {
@@ -190,14 +180,20 @@ class CreatePostFragment : Fragment(R.layout.fragment_create_post) {
 
                         val coords = state.coords
                         binding.coordsRow.isVisible = coords != null
-                        if(coords !=null){
-                            binding.coordsRow.text = String.format(Locale.getDefault(), "%.4f, %.4f", coords.lat, coords.lng)
+                        if (coords != null) {
+                            binding.coordsRow.text = String.format(
+                                Locale.getDefault(),
+                                "%.4f, %.4f",
+                                coords.lat,
+                                coords.lng
+                            )
                         }
                     }
                 }
                 launch {
-                    viewModel.error.collect { message ->
-                        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+                    viewModel.error.collect { error ->
+                        Toast.makeText(requireContext(), error.toUserMessage(), Toast.LENGTH_SHORT)
+                            .show()
                     }
                 }
                 launch {
@@ -236,9 +232,12 @@ class CreatePostFragment : Fragment(R.layout.fragment_create_post) {
     private fun openCoordsPicker() {
         val coords = viewModel.state.value.coords
         val bundle = Bundle().apply {
-            putBoolean("hasCoords", coords != null)
-            putDouble("arg_lat", coords?.lat ?: 0.0)
-            putDouble("arg_lng", coords?.lng ?: 0.0)
+//            putBoolean("hasCoords", coords != null)
+//            putDouble("arg_lat", coords?.lat ?: 0.0)
+//            putDouble("arg_lng", coords?.lng ?: 0.0)
+            putBoolean(MapPickerFragment.ARG_HAS_COORDS, coords != null)
+            putDouble(MapPickerFragment.ARG_LAT, coords?.lat ?: 0.0)
+            putDouble(MapPickerFragment.ARG_LONG, coords?.lng ?: 0.0)
         }
         findNavController().navigate(R.id.action_createPostFragment_to_mapPickerFragment, bundle)
     }
@@ -250,5 +249,6 @@ class CreatePostFragment : Fragment(R.layout.fragment_create_post) {
 
     companion object {
         const val IS_POST_CHANGED = "postChanged"
+        const val ARG_POST_ID = "postId"
     }
 }

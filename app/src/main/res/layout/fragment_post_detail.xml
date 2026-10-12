@@ -90,7 +90,7 @@
                     android:layout_width="72dp"
                     android:layout_height="72dp"
                     android:layout_gravity="center"
-                    android:contentDescription="Воспроизвести"
+                    android:contentDescription="@string/play_ru"
                     android:src="@drawable/ic_play_circle"
                     android:visibility="gone"
                     tools:visibility="visible" />
@@ -131,7 +131,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Likers"
+                        android:text="@string/likers"
                         android:textColor="#201A33"
                         android:textSize="16sp"
                         android:textStyle="bold" />
@@ -170,7 +170,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Mentioned"
+                        android:text="@string/mentioned"
                         android:textColor="#201A33"
                         android:textSize="16sp"
                         android:textStyle="bold" />

@@ -91,7 +91,7 @@
                     android:layout_width="72dp"
                     android:layout_height="72dp"
                     android:layout_gravity="center"
-                    android:contentDescription="Воспроизвести"
+                    android:contentDescription="@string/play_ru"
                     android:src="@drawable/ic_play_circle"
                     android:visibility="gone"
                     tools:visibility="visible" />
@@ -141,7 +141,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Speakers"
+                        android:text="@string/speakers"
                         android:textColor="#201A33"
                         android:textSize="16sp"
                         android:textStyle="bold" />
@@ -165,7 +165,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Likers"
+                        android:text="@string/likers"
                         android:textColor="#201A33"
                         android:textSize="16sp"
                         android:textStyle="bold" />
@@ -204,7 +204,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Participants"
+                        android:text="@string/participants"
                         android:textColor="#201A33"
                         android:textSize="16sp"
                         android:textStyle="bold" />
@@ -222,7 +222,7 @@
                             android:layout_width="24dp"
                             android:layout_height="24dp"
                             android:background="?attr/selectableItemBackgroundBorderless"
-                            android:contentDescription="Участвовать"
+                            android:contentDescription="@string/participate_ru"
                             android:src="@drawable/ic_mention_outline_24" />
 
                         <TextView
@@ -250,7 +250,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:text="Раздел в разработке"
+                    android:text="@string/under_construction"
                     android:textColor="#6E6A7C" />
             </FrameLayout>
         </LinearLayout>

@@ -18,14 +18,14 @@
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:background="?attr/selectableItemBackgroundBorderless"
-            android:contentDescription="Назад"
+            android:contentDescription="@string/back_ru"
             android:src="@drawable/ic_back_arrow" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:text="Registration"
+            android:text="@string/registration"
             android:textColor="#1B1B2F"
             android:textSize="20sp"
             android:textStyle="bold" />
@@ -41,7 +41,7 @@
             android:id="@+id/uploadAvatar"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:contentDescription="Фото профиля"
+            android:contentDescription="@string/photo_profile"
             android:scaleType="centerCrop"
             android:src="@drawable/upload_avatar_button" />
     </FrameLayout>
@@ -50,7 +50,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="28dp"
-        android:text="Login"
+        android:text="@string/login"
         android:textColor="#1B1B2F"
         android:textSize="14sp" />
 
@@ -70,7 +70,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
-        android:text="Login cannot be empty"
+        android:text="@string/login_cannot_be_empty"
         android:textColor="#FF3B30"
         android:textSize="14sp"
         android:visibility="gone" />
@@ -79,7 +79,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:text="Name"
+        android:text="@string/name"
         android:textColor="#1B1B2F"
         android:textSize="14sp" />
 
@@ -99,7 +99,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
-        android:text="Name cannot be empty"
+        android:text="@string/name_cannot_be_empty"
         android:textColor="#FF3B30"
         android:textSize="14sp"
         android:visibility="gone" />
@@ -108,7 +108,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:text="Password"
+        android:text="@string/password"
         android:textColor="#1B1B2F"
         android:textSize="14sp" />
 
@@ -120,7 +120,7 @@
         android:background="@drawable/bg_input"
         android:drawableEnd="@drawable/ic_eye_crossed"
         android:drawablePadding="12dp"
-        android:hint="Password"
+        android:hint="@string/password"
         android:inputType="textPassword"
         android:paddingHorizontal="16dp"
         android:paddingEnd="48dp"
@@ -131,7 +131,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
-        android:text="Password cannot be empty"
+        android:text="@string/password_cannot_be_empty"
         android:textColor="#FF3B30"
         android:textSize="14sp"
         android:visibility="gone" />
@@ -140,7 +140,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:text="Repeat Password"
+        android:text="@string/repeat_password"
         android:textColor="#1B1B2F"
         android:textSize="14sp" />
 
@@ -152,7 +152,7 @@
         android:background="@drawable/bg_input"
         android:drawableEnd="@drawable/ic_eye"
         android:drawablePadding="12dp"
-        android:hint="Confirm Password"
+        android:hint="@string/confirm_password"
         android:inputType="textPassword"
         android:paddingHorizontal="16dp"
         android:paddingEnd="48dp"
@@ -163,7 +163,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
-        android:text="Passwords dont match"
+        android:text="@string/passwords_dont_match"
         android:textColor="#FF3B30"
         android:textSize="14sp"
         android:visibility="gone" />
@@ -176,7 +176,7 @@
         android:background="@drawable/bg_button_login"
         android:enabled="false"
         android:stateListAnimator="@null"
-        android:text="Register"
+        android:text="@string/register"
         android:textColor="@android:color/white"
         android:textSize="16sp"
         android:textStyle="bold" />

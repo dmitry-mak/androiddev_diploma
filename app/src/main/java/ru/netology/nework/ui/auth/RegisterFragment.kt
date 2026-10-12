@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -21,6 +22,7 @@ import kotlinx.coroutines.launch
 import ru.netology.nework.R
 import ru.netology.nework.auth.AuthViewModel
 import ru.netology.nework.databinding.FragmentRegisterScreenBinding
+import ru.netology.nework.error.toUserMessage
 import ru.netology.nework.util.setupPasswordToggle
 
 
@@ -65,30 +67,11 @@ class RegisterFragment : Fragment() {
             eyeCrossed = R.drawable.ic_eye_crossed
         )
 
-        val watcher = object : TextWatcher {
-            override fun afterTextChanged(s: Editable?) {
-                updateButton()
-                clearErrors()
-            }
-
-            override fun beforeTextChanged(
-                s: CharSequence?,
-                start: Int,
-                count: Int,
-                after: Int
-            ) {
-            }
-
-            override fun onTextChanged(
-                s: CharSequence?,
-                start: Int,
-                before: Int,
-                count: Int
-            ) {
-            }
+        val watcher = binding.etLogin.doAfterTextChanged {
+            updateButton()
+            clearErrors()
         }
 
-        binding.etLogin.addTextChangedListener(watcher)
         binding.etName.addTextChangedListener(watcher)
         binding.etPassword.addTextChangedListener(watcher)
         binding.etConfirmPassword.addTextChangedListener(watcher)
@@ -141,8 +124,8 @@ class RegisterFragment : Fragment() {
                     }
                 }
                 launch {
-                    viewModel.error.collect { message ->
-                        Toast.makeText(requireContext(), message, Toast.LENGTH_LONG).show()
+                    viewModel.error.collect { error ->
+                        Toast.makeText(requireContext(), error.toUserMessage(), Toast.LENGTH_LONG).show()
                     }
                 }
                 launch {

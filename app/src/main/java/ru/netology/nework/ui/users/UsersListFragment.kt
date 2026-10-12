@@ -36,9 +36,12 @@ class UsersListFragment : Fragment(R.layout.fragment_users_list) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentUsersListBinding.bind(view)
 
-        val title = arguments?.getString("title")?.takeIf { it.isNotBlank() }
-        val mode = arguments?.getString("mode") ?: "view"
-        val preselectedIds = arguments?.getLongArray("userIds")?.toSet() ?: emptySet()
+//        val title = arguments?.getString("title")?.takeIf { it.isNotBlank() }
+//        val mode = arguments?.getString("mode") ?: "view"
+//        val preselectedIds = arguments?.getLongArray("userIds")?.toSet() ?: emptySet()
+        val title = arguments?.getString(ARG_TITLE)?.takeIf { it.isNotBlank() }
+        val mode = arguments?.getString(ARG_MODE) ?: "view"
+        val preselectedIds = arguments?.getLongArray(ARG_USER_IDS)?.toSet() ?: emptySet()
         val isSelected = mode == "select"
 
         if (title != null) {
@@ -49,7 +52,7 @@ class UsersListFragment : Fragment(R.layout.fragment_users_list) {
             selectMode = isSelected,
             initialSelected = preselectedIds,
             onUserClick = if (isSelected) null else { user ->
-                val bundle = Bundle().apply { putLong("userId", user.id) }
+                val bundle = Bundle().apply { putLong(UserProfileFragment.ARG_USER_ID, user.id) }
                 findNavController().navigate(
                     R.id.action_usersListFragment_to_userProfileFragment, bundle
                 )
@@ -107,5 +110,8 @@ class UsersListFragment : Fragment(R.layout.fragment_users_list) {
     companion object {
         const val SELECT_USERS_REQUEST_KEY = "select_users_request"
         const val SELECTED_IDS_KEY = "selected_ids"
+        const val ARG_TITLE = "title"
+        const val ARG_MODE = "mode"
+        const val ARG_USER_IDS = "userIds"
     }
 }

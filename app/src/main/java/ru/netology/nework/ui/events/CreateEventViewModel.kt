@@ -14,6 +14,8 @@ import ru.netology.nework.dto.AttachmentDto
 import ru.netology.nework.dto.CoordinatesDto
 import ru.netology.nework.dto.CreateEventRequest
 import ru.netology.nework.dto.EventType
+import ru.netology.nework.error.AppError
+import ru.netology.nework.error.toAppError
 import ru.netology.nework.repository.EventRepository
 import ru.netology.nework.repository.MediaRepository
 import java.io.File
@@ -44,7 +46,7 @@ class CreateEventViewModel @Inject constructor(
     private val _state = MutableStateFlow(CreateEventUiState())
     val state = _state.asStateFlow()
 
-    private val _error = MutableSharedFlow<String>()
+    private val _error = MutableSharedFlow<AppError>()
     val error = _error.asSharedFlow()
 
     private val _eventSaved = MutableSharedFlow<Unit>()
@@ -75,7 +77,7 @@ class CreateEventViewModel @Inject constructor(
                     }
                 }
                 .onFailure { error ->
-                    _error.emit(error.message ?: "Не удалось загрузить событие")
+                    _error.emit(error.toAppError())
                 }
         }
     }
@@ -91,7 +93,7 @@ class CreateEventViewModel @Inject constructor(
     fun attach(file: File) {
         val type = mediaRepository.mediaTypeOf(file)
         if (type == null) {
-            viewModelScope.launch { _error.emit("Неподдерживаемый тип файла") }
+            viewModelScope.launch { _error.emit(AppError.UnsupportedAttachmentTYpe) }
             return
         }
         viewModelScope.launch {
@@ -101,13 +103,13 @@ class CreateEventViewModel @Inject constructor(
                     _state.update {
                         it.copy(
                             uploading = false,
-                            attachment = AttachmentDto(url = media.url, type = type.name)
+                            attachment = AttachmentDto(url = media.url, type = type)
                         )
                     }
                 }
                 .onFailure { error ->
                     _state.update { it.copy(uploading = false) }
-                    _error.emit(error.message ?: "Ошибка загрузки")
+                    _error.emit(error.toAppError())
                 }
         }
     }
@@ -118,13 +120,13 @@ class CreateEventViewModel @Inject constructor(
         val current = _state.value
         if (current.content.isBlank()) {
             viewModelScope.launch {
-                _error.emit("Описание события не может быть пустым")
+                _error.emit(AppError.EmptyEventContent)
             }
             return
         }
         val millis = current.dateTimeMillis
         if (millis == null) {
-            viewModelScope.launch { _error.emit("Укажите дату и время мероприятия") }
+            viewModelScope.launch { _error.emit(AppError.DateTimeRequired) }
             return
         }
 
@@ -147,7 +149,7 @@ class CreateEventViewModel @Inject constructor(
                 }
                 .onFailure { error ->
                     _state.update { it.copy(saving = false) }
-                    _error.emit(error.message ?: "Не удалось сохранить событие")
+                    _error.emit(error.toAppError())
                 }
         }
     }

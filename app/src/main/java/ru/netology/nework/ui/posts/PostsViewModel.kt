@@ -13,6 +13,8 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import ru.netology.nework.auth.AppAuth
 import ru.netology.nework.dto.PostDto
+import ru.netology.nework.error.AppError
+import ru.netology.nework.error.toAppError
 import ru.netology.nework.repository.PostRepository
 import javax.inject.Inject
 
@@ -30,7 +32,7 @@ class PostsViewModel @Inject constructor(
         }.cachedIn(viewModelScope)
 
 
-    private val _error = MutableSharedFlow<String>()
+    private val _error = MutableSharedFlow<AppError>()
     val error = _error.asSharedFlow()
 
     private val myId: Long get() = appAuth.authState.value.id
@@ -50,9 +52,9 @@ class PostsViewModel @Inject constructor(
                 .onSuccess { serverPost ->
                     repository.updateDb(serverPost.copy(ownedByMe = post.ownedByMe))
                 }
-                .onFailure { e ->
+                .onFailure { error ->
                     repository.updateDb(post)
-                    _error.emit(e.message ?: "Не удалось изменить лайк")
+                    _error.emit(error.toAppError())
                 }
         }
     }
@@ -61,8 +63,9 @@ class PostsViewModel @Inject constructor(
         viewModelScope.launch {
             repository.deleteFromDb(post.id)
             repository.deletePost(post.id)
-                .onFailure { e ->
-                    _error.emit(e.message ?: "Не удалось удалить пост")
+                .onFailure { error ->
+                    repository.updateDb(post)
+                    _error.emit(error.toAppError())
                 }
         }
     }

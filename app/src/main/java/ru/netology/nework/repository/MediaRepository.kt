@@ -27,14 +27,11 @@ class MediaRepository @Inject constructor(
         const val FILE_MAX_SIZE = 1024 * 1024 * 15L //не больше 15 мб, по ТЗ
     }
 
-    fun mediaTypeOf(file: File): AttachmentType? {
-        val extension = file.extension.lowercase()
-        return when {
-            extension in listOf("jpg", "jpeg", "png", "gif") -> AttachmentType.IMAGE
-            extension in listOf("mp4", "mov", "avi", "mkv") -> AttachmentType.VIDEO
-            extension in listOf("mp3", "wav", "aac") -> AttachmentType.AUDIO
+    fun mediaTypeOf(file: File): AttachmentType? = when (file.extension.lowercase()){
+            "jpg", "jpeg", "png", "gif" -> AttachmentType.IMAGE
+            "mp4", "mov", "avi", "mkv" -> AttachmentType.VIDEO
+            "mp3", "wav", "aac" -> AttachmentType.AUDIO
             else -> null
-        }
     }
 
     suspend fun uploadMedia(file: File): Result<MediaDto> = withContext(Dispatchers.IO) {

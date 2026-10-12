@@ -3,9 +3,9 @@
     <group android:id="@+id/owned">
         <item
             android:id="@+id/menu_remove"
-            android:title="Remove" />
+            android:title="@string/remove" />
         <item
             android:id="@+id/menu_edit"
-            android:title="Edit" />
+            android:title="@string/edit" />
     </group>
 </menu>

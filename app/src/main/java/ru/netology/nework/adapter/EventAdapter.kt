@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import ru.netology.nework.R
 import ru.netology.nework.databinding.EventCardBinding
+import ru.netology.nework.dto.AttachmentType
 import ru.netology.nework.dto.EventDto
 import ru.netology.nework.dto.EventType
 import ru.netology.nework.util.DateUtils
@@ -75,7 +76,7 @@ class EventViewHolder(
 //        playIcon.isVisible = event.attachment?.type == "VIDEO" || event.attachment?.type == "AUDIO"
 //        playIcon.setOnClickListener { onInteractionListener.onPlayMedia(event) }
         when (event.attachment?.type) {
-            "IMAGE" -> {
+            AttachmentType.IMAGE  -> {
                 attachmentContainer.isVisible = true
                 playIcon.isVisible = false
                 Glide.with(attachmentImage)
@@ -85,7 +86,7 @@ class EventViewHolder(
                 attachmentContainer.setOnClickListener(null)
             }
 
-            "VIDEO", "AUDIO" -> {
+            AttachmentType.VIDEO, AttachmentType.AUDIO -> {
                 attachmentContainer.isVisible = true
                 playIcon.isVisible = true
                 attachmentImage.setImageResource(0)

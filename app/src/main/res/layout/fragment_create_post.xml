@@ -37,7 +37,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:text="Mentioned: 3"
+                android:text="@string/mentioned"
                 android:textColor="#6C4CB4"
                 android:textSize="14sp"
                 android:visibility="gone" />
@@ -75,7 +75,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom|center_horizontal"
                     android:layout_marginBottom="8dp"
-                    android:text="Remove" />
+                    android:text="@string/remove" />
             </FrameLayout>
 
             <ProgressBar
@@ -107,7 +107,7 @@
             android:layout_height="48dp"
             android:layout_marginStart="8dp"
             android:background="?attr/selectableItemBackgroundBorderless"
-            android:contentDescription="Добавить фото"
+            android:contentDescription="@string/add_photo"
             android:src="@drawable/ic_camera_24" />
 
         <ImageButton
@@ -116,7 +116,7 @@
             android:layout_height="48dp"
             android:layout_marginStart="8dp"
             android:background="?attr/selectableItemBackgroundBorderless"
-            android:contentDescription="Прикрепить файл"
+            android:contentDescription="@string/attach_file"
             android:src="@drawable/ic_attach_24" />
 
         <ImageButton
@@ -125,7 +125,7 @@
             android:layout_height="48dp"
             android:layout_marginStart="8dp"
             android:background="?attr/selectableItemBackgroundBorderless"
-            android:contentDescription="Упомянуть пользователя"
+            android:contentDescription="@string/mention_user"
             android:src="@drawable/ic_mention_24" />
 
         <ImageButton
@@ -134,7 +134,7 @@
             android:layout_height="48dp"
             android:layout_marginStart="8dp"
             android:background="?attr/selectableItemBackgroundBorderless"
-            android:contentDescription="Отметить локацию"
+            android:contentDescription="@string/add_location"
             android:src="@drawable/ic_location_24" />
 
     </LinearLayout>

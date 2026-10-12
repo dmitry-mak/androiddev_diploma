@@ -19,7 +19,7 @@
                 android:id="@+id/profile_avatar_image"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:contentDescription="Profile avatar"
+                android:contentDescription="@string/profile_avatar"
                 android:scaleType="centerCrop"
                 android:visibility="gone"
                 tools:visibility="visible" />
@@ -49,12 +49,12 @@
             <com.google.android.material.tabs.TabItem
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Wall" />
+                android:text="@string/wall" />
 
             <com.google.android.material.tabs.TabItem
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Jobs" />
+                android:text="@string/jobs" />
         </com.google.android.material.tabs.TabLayout>
 
         <FrameLayout
@@ -76,7 +76,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:text="Постов пока нет"
+                android:text="@string/posts_wall_still_empty"
                 android:visibility="gone" />
         </FrameLayout>
 
@@ -100,7 +100,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:text="Список мест работы пуст"
+                android:text="@string/job_list_still_empty"
                 android:visibility="gone" />
         </FrameLayout>
     </LinearLayout>
@@ -111,7 +111,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="16dp"
-        android:contentDescription="Добавить место работы"
+        android:contentDescription="@string/add_job"
         android:src="@drawable/ic_add"
         android:visibility="gone"
         tools:visibility="visible" />

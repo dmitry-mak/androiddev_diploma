@@ -13,6 +13,8 @@ import kotlinx.coroutines.launch
 import ru.netology.nework.dto.PostDto
 import ru.netology.nework.dto.UserDto
 import ru.netology.nework.dto.UserPreviewDto
+import ru.netology.nework.error.AppError
+import ru.netology.nework.error.toAppError
 import ru.netology.nework.repository.PostRepository
 import ru.netology.nework.repository.UserRepository
 import javax.inject.Inject
@@ -37,7 +39,7 @@ class PostDetailViewModel @Inject constructor(
     private val _state = MutableStateFlow(PostDetailUiState())
     val state = _state.asStateFlow()
 
-    private val _error = MutableSharedFlow<String>()
+    private val _error = MutableSharedFlow<AppError>()
     val error = _error.asSharedFlow()
 
     init {
@@ -67,7 +69,7 @@ class PostDetailViewModel @Inject constructor(
                 }
                 .onFailure {  error ->
                     _state.update { it.copy(loading = false)}
-                    _error.emit(error.message?: "Не удалось загрузить пост")
+                    _error.emit(error.toAppError())
                 }
         }
     }
