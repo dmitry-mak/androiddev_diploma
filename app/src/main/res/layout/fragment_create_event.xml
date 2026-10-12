@@ -30,7 +30,7 @@
                 android:importantForAutofill="no"
                 android:inputType="textMultiLine|textCapSentences"
                 android:minLines="6"
-                android:textColor="#3E3A49"
+                android:textColor="@color/not_black_not_grey"
                 android:textSize="16sp" />
 
             <TextView
@@ -40,7 +40,7 @@
                 android:layout_marginTop="8dp"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:paddingVertical="4dp"
-                android:textColor="#6C4CB4"
+                android:textColor="@color/nework_purple_dark"
                 android:textSize="14sp"
                 android:visibility="gone"
                 tools:text="28.01.2026 Online"
@@ -51,7 +51,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
-                android:textColor="#6C4CB4"
+                android:textColor="@color/nework_purple_dark"
                 android:textSize="14sp"
                 android:visibility="gone"
                 tools:text="Speakers: 3"
@@ -64,7 +64,7 @@
                 android:layout_marginTop="4dp"
                 android:background="?attr/selectableItemBackground"
                 android:paddingVertical="4dp"
-                android:textColor="#6C4CB4"
+                android:textColor="@color/nework_purple_dark"
                 android:textSize="14sp"
                 android:visibility="gone"
                 tools:text="55.7558, 37.6173"
@@ -108,7 +108,7 @@
         android:id="@+id/bottom_bar"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:background="#F7F3FB"
+        android:background="@color/nework_background"
         android:gravity="center_vertical"
         android:orientation="horizontal"
         android:paddingHorizontal="8dp"
@@ -165,5 +165,4 @@
             android:foreground="?attr/selectableItemBackgroundBorderless"
             android:src="@drawable/ic_add" />
     </LinearLayout>
-
 </androidx.constraintlayout.widget.ConstraintLayout>

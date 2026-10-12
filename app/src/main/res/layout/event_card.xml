@@ -6,10 +6,10 @@
     android:layout_height="wrap_content"
     android:layout_marginHorizontal="16dp"
     android:layout_marginVertical="8dp"
-    app:cardBackgroundColor="#F7F3FB"
+    app:cardBackgroundColor="@color/nework_background"
     app:cardCornerRadius="12dp"
     app:cardElevation="0dp"
-    app:strokeColor="#E9E1F2"
+    app:strokeColor="@color/stroke_color"
     app:strokeWidth="1dp">
 
     <LinearLayout
@@ -57,7 +57,7 @@
                 android:layout_marginEnd="8dp"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:textColor="#201A33"
+                android:textColor="@color/header_text"
                 android:textSize="16sp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toStartOf="@id/menu_button"
@@ -74,7 +74,7 @@
                 android:layout_marginEnd="8dp"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:textColor="#6E6A7C"
+                android:textColor="@color/nework_purple_light"
                 android:textSize="12sp"
                 app:layout_constraintBottom_toBottomOf="@id/avatar_container"
                 app:layout_constraintEnd_toStartOf="@id/menu_button"
@@ -132,7 +132,7 @@
                 android:id="@+id/event_type"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="#3E3A49"
+                android:textColor="@color/not_black_not_grey"
                 android:textSize="16sp"
                 tools:text="Offline" />
 
@@ -141,7 +141,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
-                android:textColor="#6E6A7C"
+                android:textColor="@color/nework_purple_light"
                 android:textSize="14sp"
                 tools:text="22.09.2026 12:00" />
         </LinearLayout>
@@ -152,7 +152,7 @@
             android:layout_height="wrap_content"
             android:lineSpacingExtra="4dp"
             android:padding="16dp"
-            android:textColor="#3E3A49"
+            android:textColor="@color/not_black_not_grey"
             android:textSize="16sp"
             tools:text="Слушайте, а как вы относитесь к тому, чтобы собраться большой компанией и поиграть в настолки? У меня есть несколько клевых игр, можем устроить вечер настолок! Пищите в лс или звоните" />
 
@@ -163,7 +163,7 @@
             android:autoLink="web"
             android:paddingHorizontal="16dp"
             android:paddingBottom="8dp"
-            android:textColorLink="#6C4CB4"
+            android:textColorLink="@color/nework_purple_dark"
             android:visibility="gone"
             tools:text="https://nework.su"
             tools:visibility="visible" />

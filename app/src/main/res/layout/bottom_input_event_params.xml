@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="#F7F3FB"
+    android:background="@color/nework_background"
     android:orientation="vertical"
     android:paddingHorizontal="16dp"
     android:paddingBottom="24dp">
@@ -40,7 +40,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:text="@string/type"
-        android:textColor="#201A33"
+        android:textColor="@color/header_text"
         android:textSize="14sp"
         android:textStyle="bold"/>
 

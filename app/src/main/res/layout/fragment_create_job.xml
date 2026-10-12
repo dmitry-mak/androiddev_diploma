@@ -69,8 +69,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
                 android:text="@string/choose_date"
-                app:chipBackgroundColor="#F7F3FB"
-                app:chipStrokeColor="#E9E1F2"
+                app:chipBackgroundColor="@color/nework_background"
+                app:chipStrokeColor="@color/stroke_color"
                 app:chipStrokeWidth="1dp"
                 tools:text="05.10.2026 - HB" />
         </LinearLayout>
@@ -83,7 +83,7 @@
         android:layout_margin="16dp"
         android:text="@string/create"
         android:textColor="@color/white"
-        app:backgroundTint="#6C4CB4"
+        app:backgroundTint="@color/nework_purple_dark"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />

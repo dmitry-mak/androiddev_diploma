@@ -55,7 +55,7 @@
                         android:id="@+id/author_name"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textColor="#201A33"
+                        android:textColor="@color/header_text"
                         android:textSize="16sp"
                         android:textStyle="bold"
                         tools:text="Leo Lipshutz" />
@@ -64,7 +64,7 @@
                         android:id="@+id/author_job"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textColor="#6E6A7C"
+                        android:textColor="@color/nework_purple_light"
                         android:textSize="14sp"
                         android:visibility="gone"
                         tools:text="Android developer"
@@ -106,7 +106,7 @@
                     android:id="@+id/published"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textColor="#6E6A7C"
+                    android:textColor="@color/nework_purple_light"
                     android:textSize="14sp"
                     tools:text="17.09.26 19:00" />
 
@@ -116,7 +116,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="12dp"
                     android:lineSpacingExtra="4dp"
-                    android:textColor="#3E3A49"
+                    android:textColor="@color/not_black_not_grey"
                     android:textSize="16sp"
                     tools:text="Шляпа- это головной убор, который носили в Древней Греции. В наше время шляпы носят от защиты от солнца или просто для красоты" />
 
@@ -132,7 +132,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/likers"
-                        android:textColor="#201A33"
+                        android:textColor="@color/header_text"
                         android:textSize="16sp"
                         android:textStyle="bold" />
 
@@ -171,7 +171,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/mentioned"
-                        android:textColor="#201A33"
+                        android:textColor="@color/header_text"
                         android:textSize="16sp"
                         android:textStyle="bold" />
 
@@ -204,7 +204,7 @@
                 android:id="@+id/map_container"
                 android:layout_width="match_parent"
                 android:layout_height="240dp"
-                android:background="#DDDDDD"
+                android:background="@color/nework_background"
                 android:visibility="gone"
                 tools:visibility="visible">
 

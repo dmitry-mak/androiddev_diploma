@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/dates_enter"
-        android:textColor="#201A33"
+        android:textColor="@color/header_text"
         android:textSize="24sp"
         android:textStyle="bold"/>
 

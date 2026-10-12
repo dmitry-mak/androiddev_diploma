@@ -3,5 +3,13 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="post_media_placeholder">#E8DFF2</color>
+    <color name="nework_background">#F7F3FB</color>
+    <color name="header_text">#201A33</color>
+    <color name="stroke_color">#E9E1F2</color>
+    <color name="nework_purple_light">#6E6A7C</color>
+    <color name="not_black_not_grey">#3E3A49</color>
+    <color name="nework_purple_dark">#6C4CB4</color>
+    <color name="grand_header">#1B1B2F</color>
+    <color name="error_warning">#B00020</color>
 
 </resources>

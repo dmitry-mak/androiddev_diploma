@@ -1,19 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <LinearLayout
+    <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="wrap_content"
+        android:background="?android:colorBackground"
+        android:elevation="0dp"
+        app:liftOnScroll="false">
 
         <FrameLayout
+            android:id="@+id/avatar_container"
             android:layout_width="match_parent"
             android:layout_height="260dp"
-            android:background="#E9E1F2">
+            android:background="@color/nework_background"
+            app:layout_scrollFlags="scroll|snap">
 
             <ImageView
                 android:id="@+id/profile_avatar_image"
@@ -41,10 +45,10 @@
             android:id="@+id/profile_tabs"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#F7F3FB"
-            app:tabIndicatorColor="#6C4CB4"
-            app:tabSelectedTextColor="#6C4CB4"
-            app:tabTextColor="#6E6A7C">
+            android:background="@color/nework_background"
+            app:tabIndicatorColor="@color/nework_purple_dark"
+            app:tabSelectedTextColor="@color/nework_purple_dark"
+            app:tabTextColor="@color/nework_purple_light">
 
             <com.google.android.material.tabs.TabItem
                 android:layout_width="wrap_content"
@@ -56,12 +60,28 @@
                 android:layout_height="wrap_content"
                 android:text="@string/jobs" />
         </com.google.android.material.tabs.TabLayout>
+    </com.google.android.material.appbar.AppBarLayout>
 
-        <FrameLayout
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <LinearLayout
             android:id="@+id/wall_page"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1">
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/wal_empty"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:padding="24dp"
+                android:text="@string/posts_wall_still_empty"
+                android:visibility="gone"
+                tools:visibility="visible" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/wall_list"
@@ -70,22 +90,24 @@
                 android:clipToPadding="false"
                 android:paddingBottom="8dp"
                 tools:listitem="@layout/post_card" />
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:id="@+id/jobs_page"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:visibility="gone">
 
             <TextView
-                android:id="@+id/wal_empty"
+                android:id="@+id/jobs_empty"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:text="@string/posts_wall_still_empty"
+                android:padding="24dp"
+                android:text="@string/job_list_still_empty"
                 android:visibility="gone" />
-        </FrameLayout>
-
-        <FrameLayout
-            android:id="@+id/jobs_page"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:visibility="gone">
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/jobs_list"
@@ -94,16 +116,16 @@
                 android:clipToPadding="false"
                 android:paddingVertical="8dp"
                 tools:listitem="@layout/job_card" />
+        </LinearLayout>
 
-            <TextView
-                android:id="@+id/jobs_empty"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="@string/job_list_still_empty"
-                android:visibility="gone" />
-        </FrameLayout>
-    </LinearLayout>
+        <ProgressBar
+            android:id="@+id/progress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:visibility="gone" />
+    </FrameLayout>
+
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab_add_job"
@@ -115,11 +137,4 @@
         android:src="@drawable/ic_add"
         android:visibility="gone"
         tools:visibility="visible" />
-
-    <ProgressBar
-        android:id="@+id/progress"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:visibility="gone" />
-</FrameLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

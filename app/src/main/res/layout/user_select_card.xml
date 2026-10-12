@@ -6,10 +6,10 @@
     android:layout_height="wrap_content"
     android:layout_marginHorizontal="8dp"
     android:layout_marginVertical="4dp"
-    app:cardBackgroundColor="#F7F3FB"
+    app:cardBackgroundColor="@color/nework_background"
     app:cardCornerRadius="12dp"
     app:cardElevation="0dp"
-    app:strokeColor="#E9E1F2"
+    app:strokeColor="@color/stroke_color"
     app:strokeWidth="1dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -50,7 +50,7 @@
             android:layout_marginStart="12dp"
             android:ellipsize="end"
             android:maxLines="1"
-            android:textColor="#201A33"
+            android:textColor="@color/grand_header"
             android:textSize="16sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
@@ -64,7 +64,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="12dp"
             android:ellipsize="end"
-            android:textColor="#6E6A7C"
+            android:textColor="@color/nework_purple_light"
             android:textSize="14sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/avatar_container"
@@ -77,7 +77,5 @@
             android:layout_height="wrap_content"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
-
     </androidx.constraintlayout.widget.ConstraintLayout>
-
 </com.google.android.material.card.MaterialCardView>

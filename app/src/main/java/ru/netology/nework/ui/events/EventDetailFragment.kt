@@ -10,7 +10,6 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.core.view.MenuProvider
 import androidx.core.view.isVisible
@@ -21,7 +20,6 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import ru.netology.nework.R
@@ -36,6 +34,7 @@ import ru.netology.nework.ui.maps.showDetailMap
 import ru.netology.nework.ui.users.UsersListFragment
 import ru.netology.nework.util.DateUtils
 import ru.netology.nework.util.UrlUtils
+import ru.netology.nework.util.showAuthDialog
 
 @AndroidEntryPoint
 class EventDetailFragment : Fragment(R.layout.fragment_event_detail) {
@@ -43,7 +42,6 @@ class EventDetailFragment : Fragment(R.layout.fragment_event_detail) {
     private val viewModel: EventDetailViewModel by viewModels()
     private var _binding: FragmentEventDetailBinding? = null
     private val binding get() = _binding!!
-    private var authDialog: AlertDialog? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -181,7 +179,6 @@ class EventDetailFragment : Fragment(R.layout.fragment_event_detail) {
             ) {
                 navigateToUsers(event.participantsIds.toLongArray(), "Participants")
             }
-//            mapPlaceholder.isVisible = event.coords != null
             showDetailMap(mapContainer, event.coords)
         }
     }
@@ -196,20 +193,6 @@ class EventDetailFragment : Fragment(R.layout.fragment_event_detail) {
         findNavController().navigate(R.id.action_eventDetailFragment_to_usersListFragment, bundle)
     }
 
-    private fun showAuthDialog() {
-        if (authDialog?.isShowing == true) return
-        authDialog = MaterialAlertDialogBuilder(requireContext())
-            .setTitle("Необходимо авторизоваться")
-            .setMessage("Войдите или зарегистрируйтесь чтобы продолжить")
-            .setPositiveButton("Вход") { _, _ ->
-                findNavController().navigate(R.id.action_global_loginFragment)
-            }
-            .setNegativeButton("Регистрация") { _, _ ->
-                findNavController().navigate(R.id.action_global_registerFragment)
-            }
-            .setNeutralButton("Отмена", null)
-            .show()
-    }
 
     private fun shareEvent(event: EventDto) {
         val shareText = buildString {
@@ -228,8 +211,6 @@ class EventDetailFragment : Fragment(R.layout.fragment_event_detail) {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        authDialog?.dismiss()
-        authDialog = null
         _binding = null
     }
 

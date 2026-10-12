@@ -19,7 +19,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
-        android:textColor="#B00020"
+        android:textColor="@color/error_warning"
         android:visibility="gone"
         tools:text="Ошибка сети"
         tools:visibility="visible" />
