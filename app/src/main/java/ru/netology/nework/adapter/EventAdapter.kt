@@ -1,7 +1,6 @@
 package ru.netology.nework.adapter
 
 import android.content.res.ColorStateList
-import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.appcompat.widget.PopupMenu
@@ -70,13 +69,17 @@ class EventViewHolder(
             if (event.likedByMe) R.drawable.ic_like_filled_24 else R.drawable.ic_like_24
         )
 
-        eventType.text = if (event.type == EventType.ONLINE) "Online" else "Offline"
+//        eventType.text = if (event.type == EventType.ONLINE) "Online" else "Offline"
+        eventType.text =
+            if (event.type == EventType.ONLINE) itemView.context.getString(R.string.online) else itemView.context.getString(
+                R.string.offline
+            )
         eventDatetime.text = DateUtils.formatTimeShort(event.datetime)
 
 //        playIcon.isVisible = event.attachment?.type == "VIDEO" || event.attachment?.type == "AUDIO"
 //        playIcon.setOnClickListener { onInteractionListener.onPlayMedia(event) }
         when (event.attachment?.type) {
-            AttachmentType.IMAGE  -> {
+            AttachmentType.IMAGE -> {
                 attachmentContainer.isVisible = true
                 playIcon.isVisible = false
                 Glide.with(attachmentImage)
@@ -136,8 +139,11 @@ class EventViewHolder(
         eventLink.text = event.link.orEmpty()
 
         participantsCount.text = event.participantsIds.size.toString()
-        val partColor =
-            if (event.participatedByMe) Color.parseColor("#6C4CB4") else Color.parseColor("#6E6A7C")
+        val partColor = ContextCompat.getColor(
+//            if (event.participatedByMe) Color.parseColor("#6C4CB4") else Color.parseColor("#6E6A7C")
+            itemView.context,
+            if (event.participatedByMe) R.color.nework_purple_dark else R.color.nework_purple_light
+        )
         participateButton.imageTintList = ColorStateList.valueOf(partColor)
         participantsCount.setTextColor(partColor)
 
