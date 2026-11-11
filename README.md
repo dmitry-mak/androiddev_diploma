@@ -5,6 +5,37 @@
 
 #### Описание:
 
+**Язык и архитектура**
+- Kotlin;
+- MVVM + Clean Archintecture;
+- Repository pattern;
+- Single Activity +  Navigation Component
+
+**Асинхронность**
+- Kotlin Coroutines;
+- Flow / StateFlow / SharedFlow;
+
+**Сеть**
+- Retrofit + OkHttp;
+- Gson
+
+**База данных**
+- Room Database;
+- Paging 3 (бесконечная прокрутка с кэшированием);
+- Remote Mediator;
+
+**DI**
+- Dagger Hilt;
+
+**UI**
+- Material Design 3;
+- View Binding;
+- Glide (загрузка изображений);
+- Google Maps SDK;
+
+**Архитектурные решения**
+- 
+
 **Основные функции приложения**:
 - Регистрация и авторизация
 
@@ -38,6 +69,37 @@
 	- Создание события предполагает: текстовую часть, добавление фотографии с камеры телефона, добавления медиа-вложения (изображение, видео, аудио), упоминания пользователей (при этом открывается новый экран выбора пользователей), добавление локации, выбор типа события (онлайн/офлайн) и даты события;
 	- Редактирование собственного события;
 	- Удаление собственного события;
+	
+- Просмотр списка пользователей
+- Клик по пользователю перенаправляет на экран просмотра профиля пользователя:
+	- Профиль пользователя отображает аватар пользователя (если аватара нет, отображается фон с заглавной первой буквой имени пользоваетеля)
+	
+	![](docs/screenshots/17_ProfileWithoutAvatar.png)
+	
+	- лента постов пользователя:
+	
+	![](docs/screenshots/15_1_UserProfilePosts.png)
+	
+	- список работ пользователя:
+	
+	![](docs/screenshots/15_2_UserProfileJobs.png)
+- Клик по иконке профиля (правый верхний угол) ведет на экран личного профилья пользователя:
+
+![](docs/screenshots/16_LinkToMyProfile.png)
+
+- Создание нового события (Находясь на вкладке Events):
+
+![](docs/screenshots/18_1_NewEventCreation.png)
+
+- При создании события обязательно должны быть указаны тип события, а так же дата и время события:
+
+![](docs/screenshots/18_2_NewEventCreationChooseTypeDateDialog.png) ![](docs/screenshots/18_3_NewEventCreationChooseDate.png) ![](docs/screenshots/18_4_NewEventCreationChooseTime.png)
+
+- Дополнительно можно указать локацию события с помощью Google Maps:
+
+![](docs/screenshots/18_5_NewEventCreationChooseLocation.png)
+
+- Добавление участников события (Speakers) происходит аналогично упоминанию пользователей при создании поста
 	
 
 
